@@ -17,10 +17,6 @@ export default class ComponentA extends Arc.Component {
     }, 10000);
   }
 
-  handleClick = () => {
-    this.setState({ text: "Button was clicked!" });
-  };
-
   render() {
     const handleClick = () => alert("Clicked!");
     const button = ArcTag.button({
