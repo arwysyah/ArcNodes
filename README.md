@@ -30,15 +30,22 @@ To run this project, you'll need:
 
    ```bash
    cd ArcNode
+   npm install
    ```
 
 ### Running the Project
 
-1. **Open `index.html` directly in your web browser:**
+1. Excecute the command below:
+
+```bash
+   npm run build
+```
+
+2. **Open `index.html` directly in your web browser:**
 
    Simply double-click the `index.html` file or open it with your preferred web browser.
 
-2. **(Optional) Serve the project using a local web server:**
+3. **(Optional) Serve the project using a local web server:**
 
    If you prefer running the project with a local web server, you can use tools like [http-server](https://www.npmjs.com/package/http-server).
 
@@ -56,7 +63,10 @@ To run this project, you'll need:
      http-server
      ```
 
-   - Open the provided URL (e.g., `http://localhost:8080`) in your web browser.
+   - Run and start
+     ```bash
+     npm start
+     ```
 
 ## Note
 
