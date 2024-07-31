@@ -63,7 +63,7 @@ To run this project, you'll need:
      http-server
      ```
 
-   - Run and start
+   - Run the server and copy paste the url to your web
      ```bash
      npm start
      ```
