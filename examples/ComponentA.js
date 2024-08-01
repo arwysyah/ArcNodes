@@ -22,9 +22,12 @@ export default class ComponentA extends Arc.Component {
     const handleClick = () => alert("Clicked!");
     const button = ArcTag.button({
       onClick: handleClick,
-      children: ["Click msse"],
+      children: ["Click here "],
     });
-    const p = ArcTag.p({ class: "text", children: ["This is a parsagraph."] });
+    const p = ArcTag.p({
+      class: "text",
+      children: ["This is a test for the text."],
+    });
     const img = ArcTag.img({
       src: "../public/audio.png",
       alt: "Image description",
