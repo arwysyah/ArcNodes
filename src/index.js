@@ -1,13 +1,16 @@
-import { renderComponents } from "./renderComponent.js";
+import { render } from "../core/render.js";
+import { stateRegister } from "../examples/index.js";
 
+function renderComponents() {
+  const container = document.getElementById("root");
+  container.innerHTML = "";
+  stateRegister.currentComponents.forEach((ComponentClass) => {
+    const component = new ComponentClass();
+    render(component, container);
+  });
+}
+
+// Initial render
 document.addEventListener("DOMContentLoaded", () => {
   renderComponents();
 });
-
-if (module.hot) {
-  console.log("HOT HOT");
-  module.hot.accept("./renderComponent", function () {
-    console.log("Accepting the updated renderComponents module!");
-    renderComponents(); // Re-render components on update
-  });
-}

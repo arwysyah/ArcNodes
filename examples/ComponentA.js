@@ -2,6 +2,7 @@ import Arc from "../core/Component.js";
 import { elem } from "../core/createElement.js";
 
 import ArcTag from "../core/element.js";
+import ComponentC from "./ComponentC.js";
 import NestedComponent from "./componentChild.js";
 
 export default class ComponentA extends Arc.Component {
@@ -21,9 +22,9 @@ export default class ComponentA extends Arc.Component {
     const handleClick = () => alert("Clicked!");
     const button = ArcTag.button({
       onClick: handleClick,
-      children: ["Click me"],
+      children: ["Click msse"],
     });
-    const p = ArcTag.p({ class: "text", children: ["This is a paragraph."] });
+    const p = ArcTag.p({ class: "text", children: ["This is a parsagraph."] });
     const img = ArcTag.img({
       src: "../public/audio.png",
       alt: "Image description",
@@ -38,6 +39,7 @@ export default class ComponentA extends Arc.Component {
       img,
       p,
       elem(NestedComponent),
+      elem(ComponentC),
     );
     // return div(image(../public/audio.png"));
   }
