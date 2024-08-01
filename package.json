@@ -8,7 +8,8 @@
   },
   "scripts": {
     "build": "webpack",
-    "start": "http-server -c-1 ."
+    "start": "http-server -c-1 .",
+    "render": "webpack && http-server -c-1 ."
   },
   "keywords": [
     "web",

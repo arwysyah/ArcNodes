@@ -71,3 +71,4 @@ To run this project, you'll need:
 ## Note
 
 This library is a work-in-progress and not yet complete. It aims to mimic some of React's functionality using pure JavaScript. Some features may be incomplete or not fully tested. Use it for educational purposes or for experimentation.
+# SafeXidMobile

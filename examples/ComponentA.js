@@ -2,6 +2,7 @@ import Arc from "../core/Component.js";
 import { elem } from "../core/createElement.js";
 
 import ArcTag from "../core/element.js";
+import ComponentC from "./ComponentC.js";
 import NestedComponent from "./componentChild.js";
 
 export default class ComponentA extends Arc.Component {
@@ -42,6 +43,7 @@ export default class ComponentA extends Arc.Component {
       img,
       p,
       elem(NestedComponent),
+      elem(ComponentC),
     );
     // return div(image(../public/audio.png"));
   }

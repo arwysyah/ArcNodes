@@ -24,6 +24,7 @@
  * // Creating a virtual node for a custom component
  * const customComponentVNode = elem(MyComponent, { someProp: "value" });
  */
+// createElement.js
 export function elem(type, props = {}, ...children) {
   if (typeof type === "function") {
     const component = new type(props);
