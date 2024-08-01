@@ -41,7 +41,7 @@ export default class ComponentA extends Arc.Component {
       button,
       img,
       p,
-      elem(NestedComponent),
+      elem(NestedComponent, { name: "Arwy" }),
       elem(ComponentC),
     );
     // return div(image(../public/audio.png"));

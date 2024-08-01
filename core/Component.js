@@ -144,12 +144,22 @@ Arc.Component = class {
     }
 
     if (typeof vNode.type === "function") {
+      // Create an instance of the component with its props
       const component = new vNode.type(vNode.props);
+
+      // Render the component to get the virtual node
+      const renderedVNode = component.render();
+
+      // Mount the component (call componentDidMount if necessary)
       component.mount();
-      return (component.dom = this.createDomElement(component.render()));
+
+      // Recursively create the DOM element for the rendered virtual node
+      return (component.dom = this.createDomElement(renderedVNode));
     }
 
     const element = document.createElement(vNode.type);
+
+    // Set attributes and event handlers
     for (const [key, value] of Object.entries(vNode.props || {})) {
       if (key.startsWith("on") && typeof value === "function") {
         element[key.toLowerCase()] = value;
@@ -158,6 +168,7 @@ Arc.Component = class {
       }
     }
 
+    // Recursively append child elements
     vNode.children.forEach((child) => {
       element.appendChild(this.createDomElement(child));
     });
