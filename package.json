@@ -1,7 +1,9 @@
 {
   "name": "my-webpack-project",
   "version": "1.0.0",
-  "description": "My webpack project",
+  "name": "arcnode",
+  "version": "0.0.1",
+  "description": "A basic prototype library for rendering web components. It captures the main ideas of React but is lightweight and easy to use. Great for trying out new ideas or building simple web apps.",
   "main": "index.js",
   "directories": {
     "test": "test"
