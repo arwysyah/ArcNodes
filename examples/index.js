@@ -1,6 +1,6 @@
-import ComponentA from "../examples/ComponentA.js";
-import ComponentB from "../examples/ComponentB.js";
-import Canvas from "./canvas.js";
+import ComponentA from "../examples/ComponentA";
+import ComponentB from "../examples/ComponentB";
+import Canvas from "./canvas";
 const stateRegister = {
   currentComponents: [ComponentA, ComponentB, Canvas],
 };

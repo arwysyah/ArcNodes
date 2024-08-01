@@ -18,17 +18,16 @@ export default class ComponentA extends Arc.Component {
     }, 10000);
   }
 
-  handleClick = () => {
-    this.setState({ text: "Button was clicked!" });
-  };
-
   render() {
     const handleClick = () => alert("Clicked!");
     const button = ArcTag.button({
       onClick: handleClick,
-      children: ["Click me"],
+      children: ["Click here "],
     });
-    const p = ArcTag.p({ class: "text", children: ["This is a paragraph."] });
+    const p = ArcTag.p({
+      class: "text",
+      children: ["This is a test for the text."],
+    });
     const img = ArcTag.img({
       src: "../public/audio.png",
       alt: "Image description",
