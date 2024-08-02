@@ -38,7 +38,7 @@ To run this project, you'll need:
 1. Excecute the command below:
 
 ```bash
-   npm run build
+   npm run build:dev
 ```
 
 2. **Open `index.html` directly in your web browser:**
@@ -46,22 +46,6 @@ To run this project, you'll need:
    Simply double-click the `index.html` file or open it with your preferred web browser.
 
 3. **(Optional) Serve the project using a local web server:**
-
-   If you prefer running the project with a local web server, you can use tools like [http-server](https://www.npmjs.com/package/http-server).
-
-   **Using `http-server`:**
-
-   - Install `http-server` globally (if not already installed):
-
-     ```bash
-     npm install -g http-server
-     ```
-
-   - Start the server in the project directory:
-
-     ```bash
-     http-server
-     ```
 
    - Run the server and copy paste the url to your web
      ```bash
@@ -71,4 +55,3 @@ To run this project, you'll need:
 ## Note
 
 This library is a work-in-progress and not yet complete. It aims to mimic some of React's functionality using pure JavaScript. Some features may be incomplete or not fully tested. Use it for educational purposes or for experimentation.
-# SafeXidMobile
