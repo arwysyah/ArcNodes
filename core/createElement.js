@@ -25,12 +25,11 @@
  * const customComponentVNode = elem(MyComponent, { someProp: "value" });
  */
 // createElement.js
-export function elem(type, props = {}, ...children) {
+function elem(type, props, ...children) {
   if (typeof type === "function") {
     const component = new type(props);
-    return component.render();
+    component.base = document.createElement("div");
+    render(component.render(), component.base);
+    return component.base;
   }
-
-  // Handle HTML tags
-  return { type, props, children: children.flat() };
 }
