@@ -29,7 +29,7 @@ module.exports = {
     compress: true,
     port: 9000,
     open: true,
-    watchFiles: ["src/**/*", "examples/**/*"], // Watch files in both src and examples folders
+    watchFiles: ["src/**/*"], // Watch files in both src and examples folders
     // client: {
     //   logging: "info",
     //   overlay: true,
