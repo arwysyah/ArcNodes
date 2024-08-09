@@ -21,17 +21,17 @@ npm install arc-nodes
 To create project by ArcNode, use npm:
 
 ```bash
-npm npm exec create-arcnode <project-name>
+npm exec create-arcnode <project-name>
 or
-npm npm create-arcnode <project-name>
+npm create-arcnode <project-name>
 ```
 
 # example
 
 ```bash
-npm npm exec create-arcnode my-app
+npm exec create-arcnode my-app
 or
-npm npm create-arcnode my-app
+npm create-arcnode my-app
 ```
 
 Run the server:
@@ -133,25 +133,64 @@ Nested components will be automatically rendered if their parent component is re
 
 ## Passing Props
 
+In ArcNode, you can pass props as JSON strings. This approach ensures that complex objects and arrays are handled consistently. Use JSON.stringify to convert objects and arrays into JSON strings before passing them as props.
+
+
+
 ### Defining Props
 
 Props can be passed to components using attributes in the HTML. Inside the component, access props via `this.props`.
 
 ```javascript
 import { ArcComponent, html } from "arc-nodes";
-export default class MyComponent extends ArcComponent {
+import "./ChildComponent.js"; // Ensure the correct path
+
+export default class ParentComponent extends ArcComponent {
+  static componentName = "parent-component";
+
+  constructor(props) {
+    super(props);
+    this.state = { count: 0, items: [{ name: "Item 1" }, { name: "Item 2" }] };
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick() {
+    this.setState({ count: this.state.count + 1 });
+  }
+
   render() {
+    // Prepare JSON string props
+    const countProps = this.state.count 
+    const itemsProps = JSON.stringify(this.state.items);
+
     return html`
       <div>
-        <p>${this.props.message}</p>
-        <p>Count: ${this.props.count}</p>
+        <h1>Parent Component</h1>
+        <button onclick="${this.handleClick}">Increase Count</button>
+        <child-component 
+          count="${countProps}" 
+          items="${itemsProps}">
+        </child-component>
       </div>
     `;
+  }
+
+  initialize() {
+    console.log("Parent component initialized");
+  }
+
+  onUpdate(prevProps, prevState) {
+    console.log("Parent component updated");
+  }
+
+  onDestroy() {
+    console.log("Parent component destroyed");
   }
 }
 
 // Register the component
-MyComponent.registerComponent("my-component");
+ParentComponent.registerComponent("parent-component");
+
 ```
 
 ### Using Props
