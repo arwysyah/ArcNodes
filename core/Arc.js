@@ -4,7 +4,7 @@ import { setupEventListeners } from "./setupEventListener";
 const components = {}; // Global registry for components
 
 /**
- * Base class for creating components in the Arc framework.
+ * Base class for creating components in the Arc Library.
  * Provides lifecycle methods, state management, and rendering capabilities.
  */
 export default class ArcComponent {
