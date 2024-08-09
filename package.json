@@ -1,40 +1,23 @@
 {
-  "name": "my-webpack-project",
-  "version": "1.0.0",
-  "name": "arcnode",
-  "version": "0.0.1",
-  "description": "A basic prototype library for rendering web components. It captures the main ideas of React but is lightweight and easy to use. Great for trying out new ideas or building simple web apps.",
-  "main": "index.js",
-  "directories": {
-    "test": "test"
-  },
-  "scripts": {
-    "build": "webpack --mode=development --node-env=production",
-    "start": "webpack-dev-server --mode development --open",
-    "build:dev": "webpack --mode=development",
-    "build:prod": "webpack --mode=production --node-env=production",
-    "watch": "webpack --watch",
-    "serve": "webpack serve"
-  },
+  "name": "arc-nodes",
+  "version": "1.0.10",
+  "description": "A minimalist framework based on ArcComponent.",
+  "main": "./src/index.js",
   "keywords": [
-    "web",
-    "network",
-    "browser",
-    "app",
-    "application",
-    "webapp"
+    "framework",
+    "arc",
+    "component",
+    "ui"
   ],
-  "author": "arwy syahputra siregar",
+  "author": "Arwy Syahputra Siregar",
   "license": "MIT",
-  "devDependencies": {
-    "@babel/cli": "^7.24.8",
-    "@babel/core": "^7.25.2",
-    "@babel/preset-env": "^7.25.3",
-    "babel-loader": "^9.1.3",
-    "html-webpack-plugin": "^5.6.0",
-    "http-server": "^14.1.1",
-    "webpack": "^5.93.0",
-    "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^5.0.4"
-  }
+  "devDependencies": {},
+  "bin": {
+    "create-arcnode": "./bin/create-arcnode.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arwysyah/ArcNode.git"
+  },
+  "homepage": "https://github.com/arwysyah/ArcNode#readme"
 }
