@@ -1,8 +1,8 @@
 import ArcComponent from "../core/Arc.js";
 import { html } from "../core/htmlParser.js";
-import "../examples/ChildComponent.js"; // Import child component
+import "../examples/ChildComponent.js";
 export default class App extends ArcComponent {
-  static componentName = "app"; // Define the component name
+ 
 
   constructor(props) {
     super(props);
@@ -42,16 +42,7 @@ export default class App extends ArcComponent {
     `;
   }
 
-  // onInitialize() {
-  //   super.onInitialize();
-  //   console.log("App component initialized");
-  // }
-  //
-  // onUpdate(prevProps, prevState) {
-  //   super.onUpdate(prevProps, prevState);
-  //   console.log("App component updated");
-  // }
 }
 
-// Register the component
+
 App.registerComponent("app");

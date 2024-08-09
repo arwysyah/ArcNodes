@@ -1,75 +1,58 @@
 # ArcNode
 
-This project is a simplified React-like UI library implemented in pure JavaScript. It includes the core concepts of components, state management, and a virtual DOM with a diffing algorithm.
+ArcNode is an experimental minimalist and simplified UI lib for creating  web applications using pure JavaScript. It includes core concepts of components, state management. This documentation provides an overview of how to use ArcNode, including installation, basic usage, and advanced features.
 
 ## Features
 
 - Component-based architecture
 - State management
-- Virtual DOM and diffing algorithm
 - Dynamic rendering and nested components
 
 ## Getting Started
 
-### Prerequisites
+## Installation
 
-To run this project, you'll need:
-
-- A web browser
-- A local web server (optional, for better experience)
-
-### Installation
-
-1. **Clone the repository:**
-
-   ```bash
-   git clone https://github.com/arwysyah/ArcNode.git
-   ```
-
-2. **Navigate to the project directory:**
-
-   ```bash
-   cd ArcNode
-   npm install
-   ```
-
-### Running the Project
-
-1. Excecute the command below:
+To install ArcNode, use npm:
 
 ```bash
-   npm run build
+npm install arc-nodes
 ```
 
-2. **Open `index.html` directly in your web browser:**
+To create project by ArcNode, use npm:
 
-   Simply double-click the `index.html` file or open it with your preferred web browser.
+```bash
+npm npm exec create-arcnode <project-name>
+or
+npm npm create-arcnode <project-name>
+```
 
-3. **(Optional) Serve the project using a local web server:**
+# example
 
-   If you prefer running the project with a local web server, you can use tools like [http-server](https://www.npmjs.com/package/http-server).
+```bash
+npm npm exec create-arcnode my-app
+or
+npm npm create-arcnode my-app
+```
 
-   **Using `http-server`:**
+Run the server:
 
-   - Install `http-server` globally (if not already installed):
+```bash
+npm start
+```
 
-     ```bash
-     npm install -g http-server
-     ```
+## Getting Started
 
-   - Start the server in the project directory:
+Create a basic project structure with the following:
 
-     ```bash
-     http-server
-     ```
-
-   - Run the server and copy paste the url to your web
-     `bash
-     npm start
-     `
-     Here's a detailed `README.md` for your component system. It covers usage, nested components, passing props, and explains the lifecycle methods in detail:
-
----
+```plaintext
+my-project/
+├── dist/
+│   └── bundle.js
+├── src/
+│   └── index.js
+├── index.html
+└── package.json
+```
 
 # Arc Component System
 
@@ -95,12 +78,8 @@ The Arc Component System allows you to create, register, and render components w
 To create a new component, extend the `ArcComponent` class and define the `render` method. Use the static `registerComponent` method to register the component with a name.
 
 ```javascript
-import ArcComponent from "./ArcComponent.js";
-import { html } from "./htmlParser.js";
-
+import { ArcComponent, html } from "arc-nodes";
 export default class MyComponent extends ArcComponent {
-  static componentName = "my-component"; // Define the component name
-
   constructor(props) {
     super(props);
     this.state = {
@@ -121,23 +100,6 @@ export default class MyComponent extends ArcComponent {
 MyComponent.registerComponent("my-component");
 ```
 
-### Rendering a Component
-
-To render a component, use the `renderComponent` function, specifying the component's name and the container element.
-
-```javascript
-import { renderComponent } from "./ComponentRegistry.js";
-
-document.addEventListener("DOMContentLoaded", () => {
-  const root = document.getElementById("root");
-  if (root) {
-    renderComponent("my-component", root);
-  } else {
-    console.error("Root element not found");
-  }
-});
-```
-
 ## Nested Components
 
 ### Defining Nested Components
@@ -145,8 +107,7 @@ document.addEventListener("DOMContentLoaded", () => {
 Nested components can be included in the `render` method of another component. Ensure that all components are registered before rendering.
 
 ```javascript
-import ArcComponent from "./ArcComponent.js";
-import { html } from "./htmlParser.js";
+import { ArcComponent, html } from "arc-nodes";
 import "./MyChildComponent.js"; // Import child component
 
 export default class ParentComponent extends ArcComponent {
@@ -177,9 +138,8 @@ Nested components will be automatically rendered if their parent component is re
 Props can be passed to components using attributes in the HTML. Inside the component, access props via `this.props`.
 
 ```javascript
+import { ArcComponent, html } from "arc-nodes";
 export default class MyComponent extends ArcComponent {
-  static componentName = "my-component";
-
   render() {
     return html`
       <div>
@@ -215,7 +175,7 @@ Lifecycle methods in Arc Component System are used to hook into various stages o
 ### Example Usage
 
 ```javascript
-import ArcComponent from "./ArcComponent.js";
+import { ArcComponent, html } from "arc-nodes";
 
 export default class MyComponent extends ArcComponent {
   static componentName = "my-component";
@@ -258,8 +218,7 @@ Here's a complete example demonstrating the usage of a parent component with nes
 ### Parent Component
 
 ```javascript
-import ArcComponent from "./ArcComponent.js";
-import { html } from "./htmlParser.js";
+import { ArcComponent, html } from "arc-nodes";
 import "./ChildComponent.js";
 
 export default class ParentComponent extends ArcComponent {
@@ -305,12 +264,9 @@ ParentComponent.registerComponent("parent-component");
 ### Child Component
 
 ```javascript
-import ArcComponent from "./ArcComponent.js";
-import { html } from "./htmlParser.js";
+import { ArcComponent, html } from "arc-nodes";
 
 export default class ChildComponent extends ArcComponent {
-  static componentName = "child-component";
-
   render() {
     return html`
       <div>
@@ -337,6 +293,30 @@ ChildComponent.registerComponent("child-component");
 ```
 
 ---
+
+## DEVELOPMENT
+
+### Prerequisites
+
+To run this project, you'll need:
+
+- A web browser
+- A local web server (optional, for better experience)
+
+### Installation
+
+1. **Clone the repository:**
+
+   ```bash
+   git clone https://github.com/arwysyah/ArcNode.git
+   ```
+
+2. **Navigate to the project directory:**
+
+   ```bash
+   cd ArcNode
+   npm install
+   ```
 
 ## Note
 
