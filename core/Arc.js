@@ -30,7 +30,7 @@ export default class ArcComponent {
   }
   renderComponent() {
     const content = this.render();
-    return `<div data-component="${this.constructor.componentName}">${content}</div>`;
+    return `<div componentKey="${this.constructor.componentName}">${content}</div>`;
   }
 
   /**
@@ -102,7 +102,7 @@ export default class ArcComponent {
    */
   getContainer() {
     return document.querySelector(
-      `[data-component="${this.constructor.componentName}"]`,
+      `[componentKey="${this.constructor.componentName}"]`,
     );
   }
 
