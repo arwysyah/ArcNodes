@@ -1,6 +1,6 @@
 # ArcNode
 
-ArcNode is an experimental minimalist and simplified UI lib for creating  web applications using pure JavaScript. It includes core concepts of components, state management. This documentation provides an overview of how to use ArcNode, including installation, basic usage, and advanced features.
+ArcNode is an experimental minimalist and simplified UI lib for creating web applications using pure JavaScript. It includes core concepts of components, state management. This documentation provides an overview of how to use ArcNode, including installation, basic usage, and advanced features.
 
 ## Features
 
@@ -46,9 +46,8 @@ Create a basic project structure with the following:
 
 ```plaintext
 my-project/
-├── dist/
-│   └── bundle.js
 ├── src/
+│   └── app.js
 │   └── index.js
 ├── index.html
 └── package.json
@@ -83,7 +82,7 @@ export default class MyComponent extends ArcComponent {
   constructor(props) {
     super(props);
     this.state = {
-      /* Initial state */
+
     };
   }
 
@@ -135,8 +134,6 @@ Nested components will be automatically rendered if their parent component is re
 
 In ArcNode, you can pass props as JSON strings. This approach ensures that complex objects and arrays are handled consistently. Use JSON.stringify to convert objects and arrays into JSON strings before passing them as props.
 
-
-
 ### Defining Props
 
 Props can be passed to components using attributes in the HTML. Inside the component, access props via `this.props`.
@@ -160,16 +157,14 @@ export default class ParentComponent extends ArcComponent {
 
   render() {
     // Prepare JSON string props
-    const countProps = this.state.count 
+    const countProps = this.state.count;
     const itemsProps = JSON.stringify(this.state.items);
 
     return html`
       <div>
         <h1>Parent Component</h1>
         <button onclick="${this.handleClick}">Increase Count</button>
-        <child-component 
-          count="${countProps}" 
-          items="${itemsProps}">
+        <child-component count="${countProps}" items="${itemsProps}">
         </child-component>
       </div>
     `;
@@ -190,7 +185,6 @@ export default class ParentComponent extends ArcComponent {
 
 // Register the component
 ParentComponent.registerComponent("parent-component");
-
 ```
 
 ### Using Props
@@ -244,11 +238,7 @@ export default class MyComponent extends ArcComponent {
 MyComponent.registerComponent("my-component");
 ```
 
-### Lifecycle Methods in Action
 
-- `initialize()`: Called when the component is first mounted.
-- `onUpdate(prevProps, prevState)`: Called each time the component updates due to state or prop changes.
-- `onDestroy()`: Called just before the component is removed from the DOM.
 
 ## Example
 
@@ -261,8 +251,6 @@ import { ArcComponent, html } from "arc-nodes";
 import "./ChildComponent.js";
 
 export default class ParentComponent extends ArcComponent {
-  static componentName = "parent-component";
-
   constructor(props) {
     super(props);
     this.state = { count: 0 };
