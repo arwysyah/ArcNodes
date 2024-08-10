@@ -24,6 +24,15 @@ export default class ArcComponent {
     this.state = {};
     this.renderedHtml = "";
     this.isInitialized = false;
+    if (!this.constructor.componentName) {
+      this.constructor.componentName = this.constructor.name.toLowerCase();
+    }
+  }
+  renderComponent() {
+    const content = this.render();
+    console.log("CONTENT", content);
+    console.log("NAME", this.constructor.componentName);
+    return `<div data-component="${this.constructor.componentName}">${content}</div>`;
   }
 
   /**
@@ -83,10 +92,10 @@ export default class ArcComponent {
   reRender() {
     const container = this.getContainer();
     if (container) {
-      container.innerHTML = this.renderedHtml;
+      container.innerHTML = this.renderedHtml; 
       setupEventListeners(container, this);
       mountNestedComponents(container);
-    }
+    } 
   }
 
   /**

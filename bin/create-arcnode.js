@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 const fs = require("fs");
 const path = require("path");
 const { execSync } = require("child_process");
@@ -16,6 +15,10 @@ if (fs.existsSync(targetPath)) {
 
 fs.mkdirSync(targetPath);
 fs.cpSync(templatePath, targetPath, { recursive: true });
+const packageJsonPath = path.join(targetPath, "package.json");
+const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf-8"));
+packageJson.name = projectName;
+fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
 
 console.log(`Created ${projectName} at ${targetPath}`);
 console.log("Installing dependencies...");
