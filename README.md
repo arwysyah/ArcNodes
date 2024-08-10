@@ -64,6 +64,7 @@ Welcome to the Arc Component System! This guide will help you understand how to 
 - [Unique Component Keys](#unique-component-keys)
 - [Nested Components](#nested-components)
 - [Passing Props](#passing-props)
+- [Styling](#styling)
 - [Lifecycle Methods](#lifecycle-methods)
 - [Example](#example)
 
@@ -299,6 +300,70 @@ When using the component, pass props as attributes:
 <my-component message="Hello, World!" count="5"></my-component>
 ```
 
+
+### Styling
+
+When using the component, styling can be used  such as:
+- Inline styles are useful for applying styles directly within the component. This is ideal for simple, component-specific styling.
+- You can define styles within the component using the <style> tag. These styles will be scoped to the component and will not affect other components.
+
+```javascript
+class ChildComponent extends ArcComponent {
+  constructor() {
+    super();
+    this.handleClick1 = this.handleClick1.bind(this);
+    this.handleClick2 = this.handleClick2.bind(this);
+    this.state = {
+      counter1: 0,
+      counter2: "loading",
+    };
+  }
+  handleClick1() {
+    console.log("clicked1");
+    this.setState({
+      counter1: this.state.counter1 + 1,
+    });
+  }
+  handleClick2() {
+    console.log("clicked2");
+    this.setState({
+      counter2: "Done",
+    });
+  }
+  initialize() {
+    this.setState({
+      counter2: "playing",
+    });
+  }
+
+  render() {
+    return html`
+<style>
+        .styled-text {
+          color: blue;
+          font-size: 18px;
+          border: 1px solid black;
+          padding: 10px;
+        }
+      </style>
+
+      <div>
+        <div style="color: red; font-size: 20px;">
+          This is a styled component with inline styles.
+        </div>
+        <button data-action="handleClick1">
+          clicked ${this.state.counter1}
+        </button>
+        <button data-action="handleClick2">click2</button>
+
+        <p class="styled-text">${this.state.counter1}</p>
+        <p>${this.state.counter2}</p>
+      </div>`;
+  }
+}
+ChildComponent.registerComponent("ChildComponent");
+
+```
 ## Lifecycle Methods
 
 ### Overview

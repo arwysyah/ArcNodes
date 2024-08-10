@@ -2,8 +2,6 @@ import ArcComponent from "../core/Arc.js";
 import { html } from "../core/htmlParser.js";
 import "../examples/ChildComponent.js";
 export default class App extends ArcComponent {
- 
-
   constructor(props) {
     super(props);
     this.state = {
@@ -31,18 +29,28 @@ export default class App extends ArcComponent {
   render() {
     console.log("App state:", this.state);
     return html`
-      <div data-component="app">
+      <style>
+        .styled-text {
+          color: blue;
+          font-size: 18px;
+          border: 1px solid black;
+          padding: 10px;
+        }
+      </style>
+
+      <div componentKey="app" class="styled-text">
         <h1>Hello, Arc Node!</h1>
         <button data-action="handleClick">Increase Count</button>
         <child-component
           message="${this.state.message}"
           count="${this.state.count}"
         ></child-component>
+        <div style="color: red; font-size: 20px;">
+          This is a styled component with inline styles.
+        </div>
       </div>
     `;
   }
-
 }
-
 
 App.registerComponent("app");
