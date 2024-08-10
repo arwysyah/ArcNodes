@@ -15,7 +15,7 @@ ArcNode is an experimental minimalist and simplified UI lib for creating web app
 To install ArcNode, use npm:
 
 ```bash
-npm install arc-nodes
+npm install -g arc-nodes
 ```
 
 To create project by ArcNode, use npm:
@@ -110,7 +110,6 @@ import { ArcComponent, html } from "arc-nodes";
 import "./MyChildComponent.js"; // Import child component
 
 export default class ParentComponent extends ArcComponent {
-  static componentName = "parent-component";
 
   render() {
     return html`
@@ -143,7 +142,6 @@ import { ArcComponent, html } from "arc-nodes";
 import "./ChildComponent.js"; // Ensure the correct path
 
 export default class ParentComponent extends ArcComponent {
-  static componentName = "parent-component";
 
   constructor(props) {
     super(props);
@@ -184,7 +182,7 @@ export default class ParentComponent extends ArcComponent {
 }
 
 // Register the component
-ParentComponent.registerComponent("parent-component");
+ParentComponent.registerComponent("parent-component"); 
 ```
 
 ### Using Props
@@ -211,7 +209,6 @@ Lifecycle methods in Arc Component System are used to hook into various stages o
 import { ArcComponent, html } from "arc-nodes";
 
 export default class MyComponent extends ArcComponent {
-  static componentName = "my-component";
 
   initialize() {
     console.log("Component initialized");
@@ -235,7 +232,7 @@ export default class MyComponent extends ArcComponent {
 }
 
 // Register the component
-MyComponent.registerComponent("my-component");
+MyComponent.registerComponent("my-component"); // written as  <my-component></my-component> later
 ```
 
 
