@@ -30,8 +30,6 @@ export default class ArcComponent {
   }
   renderComponent() {
     const content = this.render();
-    console.log("CONTENT", content);
-    console.log("NAME", this.constructor.componentName);
     return `<div data-component="${this.constructor.componentName}">${content}</div>`;
   }
 
@@ -45,7 +43,7 @@ export default class ArcComponent {
     if (name) {
       this.componentName = name; // Set the component name
       components[name.toLowerCase()] = this;
-      console.log(`Component registered: ${name}`);
+
     } else {
       console.error("Component name is not defined");
     }
@@ -58,7 +56,6 @@ export default class ArcComponent {
    * @returns {ArcComponent|undefined} The component class or `undefined` if not found.
    */
   static getComponent(name) {
-    console.log(components);
     return components[name.toLowerCase()];
   }
 
