@@ -31,7 +31,7 @@ export default class App extends ArcComponent {
   render() {
     console.log("App state:", this.state);
     return html`
-      <div data-component="app">
+      <div componentKey="app">
         <h1>Hello, Arc Node!</h1>
         <button data-action="handleClick">Increase Count</button>
         <child-component
