@@ -61,6 +61,7 @@ Welcome to the Arc Component System! This guide will help you understand how to 
 
 - [Introduction](#introduction)
 - [Basic Usage](#basic-usage)
+- [Unique Component Keys](#unique-component-keys)
 - [Nested Components](#nested-components)
 - [Passing Props](#passing-props)
 - [Lifecycle Methods](#lifecycle-methods)
@@ -99,7 +100,112 @@ export default class MyComponent extends ArcComponent {
 MyComponent.registerComponent("my-component");
 ```
 
+Here's the updated documentation and example component with the addition of the `componentKey`:
+
+---
+
+
+
+## Unique Component Keys
+
+When pre-rendering your component and triggering the DOM, it is essential to add a `componentKey` attribute to ensure that each instance of your component is unique. The `componentKey` helps ArcNode efficiently manage and update components, especially when dealing with child component and sure that is gonna rerender whenever setstae triggered.
+
+### Example Usage of `componentKey`
+
+Ensure that each component has a unique `componentKey` when rendering:
+
+```javascript
+import { ArcComponent, html } from "arc-nodes";
+
+export default class MyComponent extends ArcComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      count: 0,
+    };
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick() {
+    this.setState({ count: this.state.count + 1 });
+  }
+
+  render() {
+    return html`
+      <div componentKey="MyComponent">
+        <p>${this.props.message}</p>
+        <button onclick="${this.handleClick}">Increase Count</button>
+        <p>Count: ${this.state.count}</p>
+      </div>
+    `;
+  }
+
+  initialize() {
+    console.log("Component initialized");
+  }
+
+  onUpdate(prevProps, prevState) {
+    console.log("Component updated");
+  }
+
+  onDestroy() {
+    console.log("Component destroyed");
+  }
+}
+
+// Register the component
+MyComponent.registerComponent("my-component");
+
+OR 
+
+
+mport { ArcComponent, html } from "arc-nodes";
+import "./ChildComponent.js";
+
+export default class MyComponent extends ArcComponent {
+ constructor(props) {
+    super(props);
+    this.state = {
+      count: 0,
+    };
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick() {
+    this.setState({ count: this.state.count + 1 });
+  }
+
+  render() {
+    return html`
+      <div componentKey="MyComponent">
+           <p>${this.props.message}</p>
+        <button onclick="${this.handleClick}">Increase Count</button>
+        <p>Count: ${this.state.count}</p>
+      </div>
+    `;
+  }
+
+  initialize() {
+    console.log("Parent component initialized");
+  }
+
+  onUpdate(prevProps, prevState) {
+    console.log("Parent component updated");
+  }
+
+  onDestroy() {
+    console.log("Parent component destroyed");
+  }
+}
+
+// Register the component
+ParentComponent.registerComponent("parent-component");
+```
+
+
+By including `componentKey` in your components, you ensure that each instance is correctly identified and managed within the DOM.
 ## Nested Components
+
 
 ### Defining Nested Components
 
