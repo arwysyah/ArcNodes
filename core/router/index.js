@@ -1,61 +1,78 @@
+import ArcComponent from "../Arc";
+import { renderComponentByName } from "../renderByComponent";
 class Router {
-  constructor(routes, notFoundRoute = "/404") {
-    this.routes = routes;
-    this.notFoundRoute = notFoundRoute;
-    this.result = document.createElement("div");
-    this.syncHash = this.syncHash.bind(this);
-    this.init();
+  constructor() {
+    this.routes = {};
+    this.initialRoute = "";
+    window.addEventListener("hashchange", this.onStart.bind(this));
+    window.addEventListener("popstate", this.onStart.bind(this));
   }
 
-  init() {
-    this.syncHash();
-    window.addEventListener("hashchange", this.syncHash);
+  /**
+   * Adds a route to the router.
+   * @param {string} path - The path for the route (e.g., '/home').
+   * @param {ArcComponent} component - The component to render for the route.
+   */
+  addRoute(path, component) {
+    this.routes[path] = component;
   }
 
-  syncHash() {
-    let hashLocation = document.location.hash.split("#")[1];
-    if (!hashLocation) {
-      hashLocation = "/";
+  /**
+   * Handles route changes and renders the appropriate component.
+   */
+  onStart() {
+    const path = window.location.hash.slice(1) || "/";
+    if (!this.routes[path]) {
+      throw Error("There is no route detected, are you missing something");
     }
-
-    let routeHandler = this.routes[hashLocation];
-    if (!routeHandler) {
-      routeHandler = this.routes[this.notFoundRoute];
+    const currentRoute = this.routes[path];
+    const currentPath = this.getFunctionName(currentRoute);
+    const component = ArcComponent.getComponent(currentPath);
+    if (!this.initialRoute) {
+      throw Error("ERROR : initialRoute not yet set");
     }
-
-    if (
-      typeof routeHandler === "function" &&
-      routeHandler.prototype &&
-      routeHandler.prototype.render
-    ) {
-      const componentInstance = new routeHandler({ router: this });
-      this.result.replaceChildren(componentInstance.render());
-      if (componentInstance.componentDidMount) {
-        componentInstance.componentDidMount();
+    if (component) {
+      const root = document.getElementById("root");
+      if (root) {
+        const instance = new component();
+        root.innerHTML = instance.renderComponent();
+        instance.initialize();
+        renderComponentByName(currentPath, root);
       }
-    } else if (typeof routeHandler === "function") {
-      console.log("hello");
-      this.result.replaceChildren(routeHandler());
     } else {
-      throw new Error(
-        "Invalid route handler: must be a component class or a function returning a DOM node",
-      );
+      if (path == "/" || this.initialRoute) {
+        renderComponentByName(this.initialRoute, root);
+      }
     }
-
-    return this.result;
+  }
+  /**
+   * Extracts the name of a function.
+   * @param {Function} fn - The function to extract the name from.
+   * @returns {string|null} - The function name or null if not found.
+   */
+  getFunctionName(fn) {
+    return fn.name || (fn.toString().match(/^function\s*([\w\$]+)/) || [])[1];
   }
 
+  /**
+   * Sets the initial route and adds it to the router.
+   * @param {string} path - The path for the initial route.
+   * @param {ArcComponent} component - The component to render for the initial route.
+   */
+  setInitialRoute(path, component) {
+    const compName = this.getFunctionName(component);
+
+    this.initialRoute = compName;
+    this.addRoute(path, component);
+  }
+
+  /**
+   * Navigates to a specific route programmatically.
+   * @param {string} path - The path to navigate to (e.g., '/home').
+   */
   navigate(path) {
-    document.location.hash = `#${path}`;
-  }
-
-  refresh() {
-    this.syncHash();
-  }
-
-  destroy() {
-    window.removeEventListener("hashchange", this.syncHash);
+    window.location.hash = path;
   }
 }
 
-export default Router;
+export const router = new Router();
