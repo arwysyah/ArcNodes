@@ -1,6 +1,6 @@
 {
   "name": "arc-nodes",
-  "version": "1.0.18",
+  "version": "1.0.23",
   "description": "A minimalist UI library based on ArcComponent.",
   "main": "./src/index.js",
   "keywords": [
@@ -18,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/arwysyah/ArcNode.git"
+    "url": "git+https://github.com/arwysyah/ArcNodes.git"
   },
-  "homepage": "https://github.com/arwysyah/ArcNode#readme"
+  "homepage": "https://github.com/arwysyah/ArcNodes#readme"
 }

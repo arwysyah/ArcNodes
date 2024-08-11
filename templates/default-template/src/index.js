@@ -5,7 +5,5 @@ document.addEventListener("DOMContentLoaded", () => {
   const root = document.getElementById("root");
   if (root) {
     renderComponentByName("App", root);
-  } else {
-    console.error("Root element not found");
-  }
+  } 
 });

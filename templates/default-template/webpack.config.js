@@ -30,10 +30,7 @@ module.exports = {
     port: 9000,
     open: true,
     watchFiles: ["src/**/*"], // Watch files in both src and examples folders
-    // client: {
-    //   logging: "info",
-    //   overlay: true,
-    // },
+
   },
   resolve: {
     extensions: [".js"], // Automatically resolve these extensions

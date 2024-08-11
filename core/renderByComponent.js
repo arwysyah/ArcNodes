@@ -22,7 +22,7 @@ export function renderComponentByName(name, container) {
 
   // Check if the component was found
   if (!Component) {
-    console.error(`Component ${name} not found`);
+    throw Error(`Component ${name} not found`);
     return;
   }
 
