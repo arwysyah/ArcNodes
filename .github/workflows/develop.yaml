@@ -1,0 +1,62 @@
+name: Create Release with GitHub CLI
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Get Version from package.json
+        id: version-check
+        run: |
+          PACKAGE_VERSION=$(jq -r .version package.json)
+          echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
+
+      - name: Check Existing Release
+        id: check-release
+        run: |
+          existing_tag=$(gh release view "v${{ env.PACKAGE_VERSION }}" --json tag_name -q '.tag_name' || echo "")
+          if [[ -z "$existing_tag" ]]; then
+            echo "Release v${{ env.PACKAGE_VERSION }} doesn't exist. Creating a new release..."
+          else
+            echo "Release v${{ env.PACKAGE_VERSION }} already exists. Skipping the release creation."
+            exit 0
+          fi
+
+      - name: Create Git Tag
+        if: steps.check-release.outcome == 'success'
+        run: |
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+          git config user.name "${{ github.actor }}"
+          git tag -a "v${{ env.PACKAGE_VERSION }}" -m "Version v${{ env.PACKAGE_VERSION }}"
+
+      - name: Save Commit Messages as Artifact
+        if: steps.check-release.outcome == 'success'
+        uses: actions/upload-artifact@v2
+        with:
+          name: commit-messages
+          path: commit_messages.txt
+
+      - name: Create GitHub Release
+        if: steps.check-release.outcome == 'success'
+        run: |
+          release_title="v${{ env.PACKAGE_VERSION }}"
+          tag="v${{ env.PACKAGE_VERSION }}"
+          git log -n 1 --pretty=format:"- %s (%an)" > commit_messages.txt
+          gh release create "$tag" --title "$release_title" --notes-file commit_messages.txt
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
