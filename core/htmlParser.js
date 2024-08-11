@@ -13,14 +13,18 @@ export function html(strings, ...values) {
     if (typeof value === "string") {
       return escapeHtml(value);
     }
+    if (typeof value === "number") {
+      return value;
+    }
     if (value instanceof Node) {
       return value.outerHTML;
     }
-    return value;
+    return value !== undefined && value !== null ? value : "";
   });
 
   return strings.reduce(
-    (acc, str, i) => acc + str + (processedValues[i] || ""),
+    (acc, str, i) =>
+      acc + str + (processedValues[i] !== undefined ? processedValues[i] : ""),
     "",
   );
 }
