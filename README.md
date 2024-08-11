@@ -66,7 +66,7 @@ Welcome to the Arc Component System! This guide will help you understand how to 
 - [Passing Props](#passing-props)
 - [Styling](#styling)
 - [Lifecycle Methods](#lifecycle-methods)
-- [Example](#example)
+- [Routing System](#routing-system-usage)
 
 ## Introduction
 
