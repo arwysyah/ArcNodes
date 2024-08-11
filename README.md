@@ -1,6 +1,6 @@
-# ArcNode
+# ArcNodes
 
-ArcNode is an experimental minimalist and simplified UI lib for creating web applications using pure JavaScript. It includes core concepts of components, state management. This documentation provides an overview of how to use ArcNode, including installation, basic usage, and advanced features.
+ArcNodes is an experimental minimalist and simplified UI lib for creating web applications using pure JavaScript. It includes core concepts of components, state management. This documentation provides an overview of how to use ArcNodes, including installation, basic usage, and advanced features.
 
 ## Features
 
@@ -12,13 +12,13 @@ ArcNode is an experimental minimalist and simplified UI lib for creating web app
 
 ## Installation
 
-To install ArcNode, use npm:
+To install ArcNodes, use npm:
 
 ```bash
 npm install -g arc-nodes
 ```
 
-To create project by ArcNode, use npm:
+To create project by ArcNodes, use npm:
 
 ```bash
 npm exec create-arcnode <project-name>
@@ -101,15 +101,13 @@ export default class MyComponent extends ArcComponent {
 MyComponent.registerComponent("my-component");
 ```
 
-Here's the updated documentation and example component with the addition of the `componentKey`:
-
 ---
 
 
 
 ## Unique Component Keys
 
-When pre-rendering your component and triggering the DOM, it is essential to add a `componentKey` attribute to ensure that each instance of your component is unique. The `componentKey` helps ArcNode efficiently manage and update components, especially when dealing with child component and sure that is gonna rerender whenever setstae triggered.
+When pre-rendering your component and triggering the DOM, it is essential to add a `componentKey` attribute to ensure that each instance of your component is unique. The `componentKey` helps ArcNodes efficiently manage and update components, especially when dealing with child component and sure that is gonna rerender whenever setstae triggered.
 
 ### Example Usage of `componentKey`
 
@@ -238,7 +236,7 @@ Nested components will be automatically rendered if their parent component is re
 
 ## Passing Props
 
-In ArcNode, you can pass props as JSON strings. This approach ensures that complex objects and arrays are handled consistently. Use JSON.stringify to convert objects and arrays into JSON strings before passing them as props.
+In ArcNodes, you can pass props as JSON strings. This approach ensures that complex objects and arrays are handled consistently. Use JSON.stringify to convert objects and arrays into JSON strings before passing them as props.
 
 ### Defining Props
 
@@ -487,6 +485,94 @@ export default class ChildComponent extends ArcComponent {
 ChildComponent.registerComponent("child-component");
 ```
 
+
+---
+
+## Routing System Usage
+### Router
+
+The `Router` class in your library enables easy route management and navigation between different components in your application. Below is a step-by-step guide on how to set up and use the router.
+
+### 1. Import the Router
+
+Start by importing the router from your library. You'll also import the components you want to associate with specific routes.
+
+```javascript
+index.js
+import { router } from './router';
+import HomeComponent from './components/HomeComponent';
+import AboutComponent from './components/AboutComponent';
+```
+
+### 2. Define Routes
+
+Use the `addRoute` method to map specific paths to components. Each route should have a unique path (e.g., `/home`) and the corresponding component that should be rendered when that path is accessed.
+
+```javascript
+// Define your routes
+router.addRoute('/home', HomeComponent);
+router.addRoute('/about', AboutComponent);
+```
+
+### 3. Set the Initial Route
+
+To define the route that should be displayed when the application first loads, use the `setInitialRoute` method. This method requires a path and the corresponding component.
+
+```javascript
+// Set the initial route
+router.setInitialRoute('/home', HomeComponent);
+```
+
+### 4. Start the Router
+
+After defining your routes and setting the initial route, call `onStart` to initialize the router and render the initial component.
+
+```javascript
+router.onStart();
+```
+
+### 5. Navigate Programmatically
+
+You can navigate to different routes programmatically using the `navigate` method. Pass the path of the route you want to navigate to.
+
+```javascript
+// Navigate to a route programmatically
+router.navigate('/about');
+```
+
+### Example
+
+Here’s how everything comes together in your `index.js`:
+
+```javascript
+import { router } from './router';
+import HomeComponent from './components/HomeComponent';
+import AboutComponent from './components/AboutComponent';
+
+// Define your routes
+router.addRoute('/home', HomeComponent);
+router.addRoute('/about', AboutComponent);
+
+// Set the initial route
+router.setInitialRoute('/home', HomeComponent);
+
+// Start the router
+router.onStart();
+
+// Navigate to a route programmatically
+router.navigate('/about');
+```
+
+### Summary
+
+- **`addRoute(path, component)`**: Adds a route to the router.
+- **`setInitialRoute(path, component)`**: Sets the initial route to be displayed when the application loads.
+- **`onStart()`**: Initializes the router and renders the initial component.
+- **`navigate(path)`**: Programmatically navigates to a specified route.
+
+
+
+
 ---
 
 ## DEVELOPMENT
@@ -503,13 +589,13 @@ To run this project, you'll need:
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/arwysyah/ArcNode.git
+   git clone https://github.com/arwysyah/ArcNodes.git
    ```
 
 2. **Navigate to the project directory:**
 
    ```bash
-   cd ArcNode
+   cd ArcNodes
    npm install
    ```
 

@@ -45,7 +45,7 @@ export default class ArcComponent {
       components[name.toLowerCase()] = this;
 
     } else {
-      console.error("Component name is not defined");
+      throw Error("Component name is not defined");
     }
   }
 
