@@ -13,8 +13,11 @@ export function html(strings, ...values) {
     if (typeof value === "string") {
       return escapeHtml(value);
     }
-    if (typeof value === "number") {
+    if (typeof value === "number" || value == 0) {
       return value;
+    }
+    if (Array.isArray(value)) {
+      return value.join("");
     }
     if (value instanceof Node) {
       return value.outerHTML;
