@@ -153,13 +153,13 @@ export default class MyComponent extends ArcComponent {
 }
 
 // Register the component
-MyComponent.registerComponent("my-component");
+MyComponent.registerComponent("MyComponent");
 
 OR 
 
 
-mport { ArcComponent, html } from "arc-nodes";
-import "./ChildComponent.js";
+import { ArcComponent, html } from "arc-nodes";
+import ChildComponent from "./ChildComponent.js";
 
 export default class MyComponent extends ArcComponent {
  constructor(props) {
@@ -198,7 +198,7 @@ export default class MyComponent extends ArcComponent {
 }
 
 // Register the component
-ParentComponent.registerComponent("parent-component");
+ParentComponent.registerComponent("MyComponent");
 ```
 
 
@@ -212,7 +212,7 @@ Nested components can be included in the `render` method of another component. E
 
 ```javascript
 import { ArcComponent, html } from "arc-nodes";
-import "./MyChildComponent.js"; // Import child component
+import MyChildComponent from "./MyChildComponent.js";    // Import child component
 
 export default class ParentComponent extends ArcComponent {
 
@@ -220,14 +220,31 @@ export default class ParentComponent extends ArcComponent {
     return html`
       <div>
         <h1>Parent Component</h1>
-        <my-child-component></my-child-component>
+        <MyChildComponent/>
+      </div>
+    `;
+  }
+}
+
+OR 
+
+import { ArcComponent, html } from "arc-nodes";
+import "./MyChildComponent.js";    // Import child component
+
+export default class ParentComponent extends ArcComponent {
+
+  render() {
+    return html`
+      <div>
+        <h1>Parent Component</h1>
+        <MyChildComponent></MyChildComponent>
       </div>
     `;
   }
 }
 
 // Register the component
-ParentComponent.registerComponent("parent-component");
+ParentComponent.registerComponent("ParentComponent");
 ```
 
 ### Rendering Nested Components
@@ -236,7 +253,7 @@ Nested components will be automatically rendered if their parent component is re
 
 ## Passing Props
 
-In ArcNodes, you can pass props as JSON strings. This approach ensures that complex objects and arrays are handled consistently. Use JSON.stringify to convert objects and arrays into JSON strings before passing them as props.
+In ArcNodes, props are string with lowercase (at least for now ) you can pass props as JSON strings. This approach ensures that complex objects and arrays are handled consistently. Use JSON.stringify to convert objects and arrays into JSON strings before passing them as props.
 
 ### Defining Props
 
@@ -244,7 +261,7 @@ Props can be passed to components using attributes in the HTML. Inside the compo
 
 ```javascript
 import { ArcComponent, html } from "arc-nodes";
-import "./ChildComponent.js"; // Ensure the correct path
+import ChildComponent from "./ChildComponent.js"; // Ensure the correct path
 
 export default class ParentComponent extends ArcComponent {
 
@@ -267,8 +284,8 @@ export default class ParentComponent extends ArcComponent {
       <div>
         <h1>Parent Component</h1>
         <button onclick="${this.handleClick}">Increase Count</button>
-        <child-component count="${countProps}" items="${itemsProps}">
-        </child-component>
+        <ChildComponent count="${countProps}" items="${itemsProps}"/>
+
       </div>
     `;
   }
@@ -295,7 +312,9 @@ ParentComponent.registerComponent("parent-component");
 When using the component, pass props as attributes:
 
 ```html
-<my-component message="Hello, World!" count="5"></my-component>
+<MyComponent message="Hello, World!" count="5"></MyComponent>
+or 
+<MyComponent message="Hello, World!" count="5"/>
 ```
 
 
@@ -401,7 +420,7 @@ export default class MyComponent extends ArcComponent {
 }
 
 // Register the component
-MyComponent.registerComponent("my-component"); // written as  <my-component></my-component> later
+MyComponent.registerComponent("MyComponent"); // written as  <MyComponent/ > or <MyComponent></MyComponent> later
 ```
 
 
