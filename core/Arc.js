@@ -21,7 +21,7 @@ export default class ArcComponent {
    */
   constructor(props) {
     this.props = props || {};
-    this.state = {};
+    this.mutableState = {};
     this.renderedHtml = "";
     this.isInitialized = false;
     if (!this.constructor.componentName) {
@@ -63,8 +63,8 @@ export default class ArcComponent {
    * Updates the component state and triggers a re-render.
    * @param {object} newState - The new state to merge with the current state.
    */
-  setState(newState) {
-    this.state = { ...this.state, ...newState };
+  applyChanges(newState) {
+    this.mutableState = { ...this.mutableState, ...newState };
     this.update();
   }
 
@@ -74,7 +74,7 @@ export default class ArcComponent {
    */
   update() {
     const prevProps = this.props;
-    const prevState = { ...this.state };
+    const prevState = { ...this.mutableState };
 
     this.renderedHtml = this.render();
     this.afterUpdate(prevProps, prevState);
