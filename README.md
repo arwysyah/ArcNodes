@@ -143,7 +143,7 @@ export default class MyComponent extends ArcComponent {
     console.log("Component initialized");
   }
 
-  onUpdate(prevProps, prevState) {
+  onDidUpdate(prevProps, prevState) {
     console.log("Component updated");
   }
 
@@ -188,7 +188,7 @@ export default class MyComponent extends ArcComponent {
     console.log("Parent component initialized");
   }
 
-  onUpdate(prevProps, prevState) {
+  onDidUpdate(prevProps, prevState) {
     console.log("Parent component updated");
   }
 
@@ -294,7 +294,7 @@ export default class ParentComponent extends ArcComponent {
     console.log("Parent component initialized");
   }
 
-  onUpdate(prevProps, prevState) {
+  onDidUpdate(prevProps, prevState) {
     console.log("Parent component updated");
   }
 
@@ -388,7 +388,7 @@ ChildComponent.registerComponent("ChildComponent");
 Lifecycle methods in Arc Component System are used to hook into various stages of a component's lifecycle. Here's how they work:
 
 - `initialize()`: Called once when the component is first created.
-- `onUpdate(prevProps, prevState)`: Called whenever the component updates.
+- `onDidUpdate(prevProps, prevState)`: Called whenever the component updates.
 - `onDestroy()`: Called just before the component is removed from the DOM.
 
 ### Example Usage
@@ -402,7 +402,7 @@ export default class MyComponent extends ArcComponent {
     console.log("Component initialized");
   }
 
-  onUpdate(prevProps, prevState) {
+  onDidUpdate(prevProps, prevState) {
     console.log("Component updated");
   }
 
@@ -460,7 +460,7 @@ export default class ParentComponent extends ArcComponent {
     console.log("Parent component initialized");
   }
 
-  onUpdate(prevProps, prevState) {
+  onDidUpdate(prevProps, prevState) {
     console.log("Parent component updated");
   }
 
@@ -491,7 +491,7 @@ export default class ChildComponent extends ArcComponent {
     console.log("Child component initialized");
   }
 
-  onUpdate(prevProps, prevState) {
+  onDidUpdate(prevProps, prevState) {
     console.log("Child component updated");
   }
 

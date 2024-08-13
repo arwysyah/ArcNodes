@@ -123,7 +123,7 @@ export default class ArcComponent {
    * @param {object} prevState - The previous state of the component.
    */
   afterUpdate(prevProps, prevState) {
-    this.onRefresh(prevProps, prevState);
+    this.onDidUpdate(prevProps, prevState);
   }
 
   /**
@@ -145,13 +145,13 @@ export default class ArcComponent {
    * @param {object} prevProps - The previous properties of the component.
    * @param {object} prevState - The previous state of the component.
    */
-  onRefresh(prevProps, prevState) {}
+  onDidUpdate(prevProps, prevState) {}
 
   /**
    * Lifecycle hook called before the component is removed from the DOM.
    * Can be overridden by subclasses to define cleanup logic.
    */
-  onCleanup() {}
+  onDestroy() {}
 
   /**
    * Must be implemented by subclasses to return the HTML string to render for the component.
