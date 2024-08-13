@@ -23,7 +23,7 @@ To create project by ArcNodes, use npm:
 ```bash
 npm exec create-arcnode <project-name>
 or
-npm create-arcnode <project-name>
+npx create-arcnode <project-name>
 ```
 
 # example
