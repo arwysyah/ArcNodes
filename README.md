@@ -1,6 +1,6 @@
 # ArcNodes
 
-ArcNodes is an experimental minimalist and simplified UI lib for creating web applications using pure JavaScript. It includes core concepts of components, state management. This documentation provides an overview of how to use ArcNodes, including installation, basic usage, and advanced features.
+ArcNodes is an experimental minimalist and simplified UI lib for creating web applications using pure JavaScript. It includes core concepts of components, state management and utilizing streamlined content rendering for a straightforward development experience.. This documentation provides an overview of how to use ArcNodes, including installation, basic usage, and advanced features.
 
 ## Features
 
