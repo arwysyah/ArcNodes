@@ -1,6 +1,7 @@
 const path = require("path");
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+
 module.exports = {
   entry: "./src/index.js",
   output: {
@@ -24,23 +25,56 @@ module.exports = {
   },
   devServer: {
     static: {
-      directory: path.resolve(__dirname), // Serve files from the examples directory
+      directory: path.resolve(__dirname), // Serve files from the root directory
     },
     compress: true,
     port: 9000,
     open: true,
-    watchFiles: ["src/**/*"], // Watch files in both src and examples folders
-
+    devMiddleware: {
+      stats: "errors-only", 
+    },
+    client: {
+      logging: "none", 
+    },
+  },
+  infrastructureLogging: {
+    level: 'error',
   },
   resolve: {
-    extensions: [".js"], // Automatically resolve these extensions
+    extensions: [".js"], 
   },
   plugins: [
-    ,
     new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, "index.html"), // Use index.html as a template
+      template: path.resolve(__dirname, "index.html"), 
     }),
     new webpack.HotModuleReplacementPlugin(),
+    function () {
+      this.hooks.done.tap("DonePlugin", (stats) => {
+        console.log('\x1b[33m    Welcome to ArcNodes! \x1b[0m \n');
+        console.log('\x1b[32mCompiled successfully!\x1b[0m \n');
+
+        console.log("You can now view your app in the browser.\n");
+        console.log(`\x1b[34mLocal:    http://localhost:9000\x1b[0m`);
+
+        const os = require("os");
+        const networkInterfaces = os.networkInterfaces();
+        const networkAddress = Object.keys(networkInterfaces)
+          .map((iface) => {
+            return networkInterfaces[iface].find(
+              (address) => address.family === "IPv4" && !address.internal
+            )?.address;
+          })
+          .filter(Boolean)[0];
+        console.log(`\x1b[34mNetwork:  http://${networkAddress}:9000\x1b[0m`);
+
+        
+        console.log(
+          "\nNote that the development build is not optimized."
+        );
+      
+      });
+    },
   ],
   mode: "development",
+  stats: "errors-only", // Only show errors
 };
