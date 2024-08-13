@@ -98,7 +98,7 @@ export default class MyComponent extends ArcComponent {
 }
 
 // Register the component
-MyComponent.registerComponent("my-component");
+MyComponent.registerComponent("MyComponent");
 ```
 
 ---
@@ -198,7 +198,7 @@ export default class MyComponent extends ArcComponent {
 }
 
 // Register the component
-ParentComponent.registerComponent("MyComponent");
+MyComponent.registerComponent("MyComponent");
 ```
 
 
@@ -304,7 +304,7 @@ export default class ParentComponent extends ArcComponent {
 }
 
 // Register the component
-ParentComponent.registerComponent("parent-component"); 
+ParentComponent.registerComponent("ParentComponent"); 
 ```
 
 ### Using Props
@@ -470,7 +470,7 @@ export default class ParentComponent extends ArcComponent {
 }
 
 // Register the component
-ParentComponent.registerComponent("parent-component");
+ParentComponent.registerComponent("ParentComponent");
 ```
 
 ### Child Component
