@@ -83,7 +83,7 @@ import { ArcComponent, html } from "arc-nodes";
 export default class MyComponent extends ArcComponent {
   constructor(props) {
     super(props);
-    this.state = {
+    this.mutableState = {
 
     };
   }
@@ -119,14 +119,14 @@ import { ArcComponent, html } from "arc-nodes";
 export default class MyComponent extends ArcComponent {
   constructor(props) {
     super(props);
-    this.state = {
+    this.mutableState = {
       count: 0,
     };
     this.handleClick = this.handleClick.bind(this);
   }
 
   handleClick() {
-    this.setState({ count: this.state.count + 1 });
+    this.applyChanges({ count: this.mutableState.count + 1 });
   }
 
   render() {
@@ -134,7 +134,7 @@ export default class MyComponent extends ArcComponent {
       <div componentKey="MyComponent">
         <p>${this.props.message}</p>
         <button onclick="${this.handleClick}">Increase Count</button>
-        <p>Count: ${this.state.count}</p>
+        <p>Count: ${this.mutableState.count}</p>
       </div>
     `;
   }
@@ -164,14 +164,14 @@ import ChildComponent from "./ChildComponent.js";
 export default class MyComponent extends ArcComponent {
  constructor(props) {
     super(props);
-    this.state = {
+    this.mutableState = {
       count: 0,
     };
     this.handleClick = this.handleClick.bind(this);
   }
 
   handleClick() {
-    this.setState({ count: this.state.count + 1 });
+    this.applyChanges({ count: this.mutableState.count + 1 });
   }
 
   render() {
@@ -179,7 +179,7 @@ export default class MyComponent extends ArcComponent {
       <div componentKey="MyComponent">
            <p>${this.props.message}</p>
         <button onclick="${this.handleClick}">Increase Count</button>
-        <p>Count: ${this.state.count}</p>
+        <p>Count: ${this.mutableState.count}</p>
       </div>
     `;
   }
@@ -267,18 +267,18 @@ export default class ParentComponent extends ArcComponent {
 
   constructor(props) {
     super(props);
-    this.state = { count: 0, items: [{ name: "Item 1" }, { name: "Item 2" }] };
+    this.mutableState = { count: 0, items: [{ name: "Item 1" }, { name: "Item 2" }] };
     this.handleClick = this.handleClick.bind(this);
   }
 
   handleClick() {
-    this.setState({ count: this.state.count + 1 });
+    this.applyChanges({ count: this.mutableState.count + 1 });
   }
 
   render() {
     // Prepare JSON string props
-    const countProps = this.state.count;
-    const itemsProps = JSON.stringify(this.state.items);
+    const countProps = this.mutableState.count;
+    const itemsProps = JSON.stringify(this.mutableState.items);
 
     return html`
       <div>
@@ -330,25 +330,25 @@ class ChildComponent extends ArcComponent {
     super();
     this.handleClick1 = this.handleClick1.bind(this);
     this.handleClick2 = this.handleClick2.bind(this);
-    this.state = {
+    this.mutableState = {
       counter1: 0,
       counter2: "loading",
     };
   }
   handleClick1() {
     console.log("clicked1");
-    this.setState({
-      counter1: this.state.counter1 + 1,
+    this.applyChanges({
+      counter1: this.mutableState.counter1 + 1,
     });
   }
   handleClick2() {
     console.log("clicked2");
-    this.setState({
+    this.applyChanges({
       counter2: "Done",
     });
   }
   initialize() {
-    this.setState({
+    this.applyChanges({
       counter2: "playing",
     });
   }
@@ -369,12 +369,12 @@ class ChildComponent extends ArcComponent {
           This is a styled component with inline styles.
         </div>
         <button data-action="handleClick1">
-          clicked ${this.state.counter1}
+          clicked ${this.mutableState.counter1}
         </button>
         <button data-action="handleClick2">click2</button>
 
-        <p class="styled-text">${this.state.counter1}</p>
-        <p>${this.state.counter2}</p>
+        <p class="styled-text">${this.mutableState.counter1}</p>
+        <p>${this.mutableState.counter2}</p>
       </div>`;
   }
 }
@@ -438,12 +438,12 @@ import "./ChildComponent.js";
 export default class ParentComponent extends ArcComponent {
   constructor(props) {
     super(props);
-    this.state = { count: 0 };
+    this.mutableState = { count: 0 };
     this.handleClick = this.handleClick.bind(this);
   }
 
   handleClick() {
-    this.setState({ count: this.state.count + 1 });
+    this.applyChanges({ count: this.mutableState.count + 1 });
   }
 
   render() {
@@ -451,7 +451,7 @@ export default class ParentComponent extends ArcComponent {
       <div>
         <h1>Parent Component</h1>
         <button data-action="handleClick">Increase Count</button>
-        <child-component count="${this.state.count}"></child-component>
+        <child-component count="${this.mutableState.count}"></child-component>
       </div>
     `;
   }

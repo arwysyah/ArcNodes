@@ -3,7 +3,7 @@ import { ArcComponent, html } from "arc-nodes";
 export default class App extends ArcComponent {
   constructor(props) {
     super(props);
-    this.state = {
+    this.mutableState = {
       count: 0,
       message: "Welcome to ArcNodes!",
     };
@@ -11,9 +11,9 @@ export default class App extends ArcComponent {
   }
 
   handleClick() {
-    this.setState({
-      count: this.state.count + 1,
-      message: `You've clicked ${this.state.count + 1} time(s)!`,
+    this.applyChanges({
+      count: this.mutableState.count + 1,
+      message: `You've clicked ${this.mutableState.count + 1} time(s)!`,
     });
   }
 
@@ -134,7 +134,7 @@ export default class App extends ArcComponent {
 
       <div class="app-container">
         <div style="font-size : 40px; font-weight:bold">ArcNodes</div>
-        <h1 class="hero-title">${this.state.message}</h1>
+        <h1 class="hero-title">${this.mutableState.message}</h1>
         <p class="hero-description">
           "ArcNodes is a straightforward framework designed to help you build
           web applications. While it is still in early development, it offers a
@@ -145,7 +145,7 @@ export default class App extends ArcComponent {
           capabilities."
         </p>
         <button class="cta-button" data-action="handleClick">Click Me</button>
-        <p class="counter">You've clicked ${this.state.count} time(s)!</p>
+        <p class="counter">You've clicked ${this.mutableState.count} time(s)!</p>
 
         <div class="footer">
           Made with ❤️ by the Arcades Team. Join us on GitHub to contribute and
