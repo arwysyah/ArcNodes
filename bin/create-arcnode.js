@@ -8,9 +8,7 @@ const templatePath = path.resolve(__dirname, "../templates/default-template");
 const targetPath = path.resolve(process.cwd(), projectName);
 
 if (fs.existsSync(targetPath)) {
-  console.error(
-    `Directory ${projectName} already exists. Choose a different name.`,
-  );
+  console.error(`Directory ${projectName} already exists. Choose a different name.`);
   process.exit(1);
 }
 
@@ -21,7 +19,19 @@ const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf-8"));
 packageJson.name = projectName;
 fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
 
+const green = '\x1b[32m';
+const blue = '\x1b[34m';
+const reset = '\x1b[0m';
+
 console.log(`Created ${projectName} at ${targetPath}`);
-console.log("Installing dependencies...");
+console.log(`${green}Installing dependencies...${reset}`);
 execSync(`cd ${projectName} && npm install`, { stdio: "inherit" });
-console.log("Project is ready!");
+console.log(`${blue}\nProject setup complete!${reset}`);
+console.log(`${blue}Navigate to your project directory:${reset}`);
+console.log(`  cd ${projectName}`);
+console.log(`${blue}Start the development server:${reset}`);
+console.log(`  npm start`);
+console.log(`${blue}Build for development:${reset}`);
+console.log(`  npm run build:dev`);
+console.log(`${blue}Build for production:${reset}`);
+console.log(`  npm run build:prod`);

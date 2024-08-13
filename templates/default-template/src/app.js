@@ -148,7 +148,7 @@ export default class App extends ArcComponent {
         <p class="counter">You've clicked ${this.mutableState.count} time(s)!</p>
 
         <div class="footer">
-          Made with ❤️ by the Arcades Team. Join us on GitHub to contribute and
+          Made with ❤️ by the ArcNodes Team. Join us on GitHub to contribute and
           collaborate!
         </div>
       </div>
