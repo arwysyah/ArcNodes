@@ -21,31 +21,35 @@ module.exports = {
           },
         },
       },
+      {
+        test: /\.css$/,
+        use: ["style-loader", "css-loader"], 
+      },
     ],
   },
   devServer: {
     static: {
-      directory: path.resolve(__dirname), // Serve files from the root directory
+      directory: path.resolve(__dirname), 
     },
     compress: true,
     port: 9000,
     open: true,
     devMiddleware: {
-      stats: "errors-only", 
+      stats: "errors-only",
     },
     client: {
-      logging: "none", 
+      logging: "none",
     },
   },
   infrastructureLogging: {
     level: 'error',
   },
   resolve: {
-    extensions: [".js"], 
+    extensions: [".js"],
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, "index.html"), 
+      template: path.resolve(__dirname, "index.html"),
     }),
     new webpack.HotModuleReplacementPlugin(),
     function () {
@@ -67,11 +71,9 @@ module.exports = {
           .filter(Boolean)[0];
         console.log(`\x1b[34mNetwork:  http://${networkAddress}:9000\x1b[0m`);
 
-        
         console.log(
           "\nNote that the development build is not optimized."
         );
-      
       });
     },
   ],

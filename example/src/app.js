@@ -7,6 +7,7 @@ export default class App extends ArcComponent {
       count: 0,
       message: "Welcome to ArcNodes!",
       data: { test: "1" },
+      response: ["1", "2"],
     };
     this.handleClick = this.handleClick.bind(this);
   }
@@ -31,7 +32,6 @@ export default class App extends ArcComponent {
   }
 
   render() {
-    console.log(this.mutableState);
     return html`
       <style>
         @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
@@ -161,6 +161,13 @@ export default class App extends ArcComponent {
           You've clicked ${this.mutableState.count} time(s)!
         </p>
 
+        <Child
+          data=${this.mutableState.data}
+          counter=${this.mutableState.count}
+          resmen=${this.mutableState.response}
+          componentKey="Child"
+         
+        ></Child>
         <div class="footer">
           Made with ❤️ by the ArcNodes Team. Join us on GitHub to contribute and
           collaborate!
@@ -169,5 +176,41 @@ export default class App extends ArcComponent {
     `;
   }
 }
+
+class Child extends ArcComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      myCounter: 0,
+    };
+  }
+
+  handleClick = () => {
+    this.applyChanges({
+      myCounter: (this.state.myCounter += 1),
+    });
+  };
+  initialize() {
+    // const files = JSON.parse(this.props.data);
+    // const counte = JSON.parse(this.props.counter)
+    // const res = JSON.parse(this.props.resmen)
+
+    this.applyChanges({
+      myCounter: this.props.counter,
+    });
+    console.log(this.props);
+  }
+
+  render() {
+    // const files = JSON.parse(this.props.data);
+    return html`
+      <div>
+        <h1>Counter: ${this.mutableState.myCounter}</h1>
+      <button data-action="handleClick">click</button>
+      </div>
+    `;
+  }
+}
+Child.registerComponent("Child");
 
 App.registerComponent("app");
