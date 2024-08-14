@@ -20,13 +20,39 @@ export default class ArcComponent {
    * @param {object} [props={}] - Initial properties for the component.
    */
   constructor(props) {
-    this.props = props || {};
+    this.props = this.parseProps(props || {});
     this.mutableState = {};
     this.renderedHtml = "";
     this.isInitialized = false;
     if (!this.constructor.componentName) {
       this.constructor.componentName = this.constructor.name.toLowerCase();
     }
+    console.log(props,"props")
+  }
+
+  /**
+ * Parses and processes the properties (props) for the component.
+ * This method converts JSON-encoded strings into their respective data types
+ * and handles any values that fail to parse as JSON.
+ *
+ * @param {Object} props - An object containing properties as key-value pairs,
+ * where values may be JSON-encoded strings.
+ * 
+ * @returns {Object} An object with properties where JSON-encoded strings
+ * are parsed back into their original data types, and other values are used as-is.
+ * 
+ *  /** */
+
+  parseProps(props) {
+    const parsedProps = {};
+    for (const [key, value] of Object.entries(props)) {
+      try {
+        parsedProps[key] = JSON.parse(value);
+      } catch (e) {
+        parsedProps[key] = value; 
+      }
+    }
+    return parsedProps;
   }
 
   /**
@@ -94,6 +120,7 @@ export default class ArcComponent {
    */
   update(prevState) {
     const prevProps = this.props;
+   
 
     this.renderedHtml = this.render();
     this.afterUpdate(prevProps, prevState);
