@@ -28,6 +28,11 @@ export default class ArcComponent {
       this.constructor.componentName = this.constructor.name.toLowerCase();
     }
   }
+
+  /**
+   * Renders the component's content inside a container with a componentKey attribute.
+   * @returns {string} The HTML string representing the component.
+   */
   renderComponent() {
     const content = this.render();
     return `<div componentKey="${this.constructor.componentName}">${content}</div>`;
@@ -43,7 +48,6 @@ export default class ArcComponent {
     if (name) {
       this.componentName = name; // Set the component name
       components[name.toLowerCase()] = this;
-
     } else {
       throw Error("Component name is not defined");
     }
@@ -61,20 +65,35 @@ export default class ArcComponent {
 
   /**
    * Updates the component state and triggers a re-render.
-   * @param {object} newState - The new state to merge with the current state.
+   * @param {object|function} stateUpdater - Either a function that returns the new state or an object representing the new state.
    */
-  applyChanges(newState) {
-    this.mutableState = { ...this.mutableState, ...newState };
-    this.update();
+  applyChanges(stateUpdater) {
+    const prevState = Array.isArray(this.mutableState)
+    // Create a shallow copy of the array
+      ? [...this.mutableState]   
+      // Create a shallow copy of the object
+      : { ...this.mutableState }; 
+
+    // Determine the new state based on the type of stateUpdater
+    const newState = typeof stateUpdater === 'function'
+      ? stateUpdater(prevState)
+      : stateUpdater;
+
+    // Merge the new state with the existing state
+    this.mutableState = Array.isArray(this.mutableState)
+      ? [...newState]              
+      : { ...this.mutableState, ...newState }; 
+
+    this.update(prevState);
   }
 
   /**
    * Updates the component by rendering new HTML and invoking lifecycle methods.
+   * @param {object} prevState - The previous state of the component.
    * @private
    */
-  update() {
+  update(prevState) {
     const prevProps = this.props;
-    const prevState = { ...this.mutableState };
 
     this.renderedHtml = this.render();
     this.afterUpdate(prevProps, prevState);
@@ -89,10 +108,10 @@ export default class ArcComponent {
   reRender() {
     const container = this.getContainer();
     if (container) {
-      container.innerHTML = this.renderedHtml; 
+      container.innerHTML = this.renderedHtml;
       setupEventListeners(container, this);
       mountNestedComponents(container);
-    } 
+    }
   }
 
   /**

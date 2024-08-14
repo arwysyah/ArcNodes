@@ -6,16 +6,29 @@ export default class App extends ArcComponent {
     this.mutableState = {
       count: 0,
       message: "Welcome to ArcNodes!",
+      data: { test: "1" },
     };
     this.handleClick = this.handleClick.bind(this);
   }
 
   handleClick() {
-    this.applyChanges({
-      count: this.mutableState.count + 1,
-      message: `You've clicked ${this.mutableState.count + 1} time(s)!`,
+    this.applyChanges((prev) => ({
+      count: prev.count + 1,
+      message: `You've clicked ${prev.count + 1} time(s)!`,
+    }));
+    this.applyChanges((prev) => {
+      return {
+        ...prev,
+        data: { ...prev.data, ...{ test2: "2" } },
+      };
     });
   }
+
+  initialize() {
+    console.log("Initialize equal to didmount");
+  }
+
+
 
   render() {
     return html`
@@ -43,7 +56,7 @@ export default class App extends ArcComponent {
           position: relative;
           overflow: hidden;
         }
-         .fade-in {
+        .fade-in {
           animation: fadeIn 2s ease forwards;
         }
 
@@ -61,7 +74,7 @@ export default class App extends ArcComponent {
           font-size: 40px;
           color: #ff4081;
           animation: rotateText 10s infinite linear;
-          padding-bottom:70px
+          padding-bottom: 70px;
         }
         @keyframes rotateText {
           from {
@@ -105,8 +118,9 @@ export default class App extends ArcComponent {
           margin-bottom: 50px;
           line-height: 1.5;
           color: #ccc;
-         text-align: center;
-         max-width: 1000px;                    }
+          text-align: center;
+          max-width: 1000px;
+        }
         .cta-button {
           background-color: #6200ea;
           color: white;
@@ -115,10 +129,7 @@ export default class App extends ArcComponent {
           border: none;
           border-radius: 5px;
           cursor: pointer;
-          transition:
-            transform 0.3s ease,
-            box-shadow 0.3s ease;
-
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         .cta-button:hover {
           transform: scale(1.1);
@@ -136,8 +147,8 @@ export default class App extends ArcComponent {
         <div style="font-size : 40px; font-weight:bold">ArcNodes</div>
         <h1 class="hero-title">${this.mutableState.message}</h1>
         <p class="hero-description">
-          "ArcNodes is a straightforward framework designed to help you build
-          web applications. While it is still in early development, it offers a
+          "ArcNodes is a straightforward library designed to help you build web
+          applications. While it is still in early development, it offers a
           foundation for creating simple and functional user interfaces. The
           framework aims to provide an easy-to-use approach for developing
           interactive components and layouts. As development progresses,
@@ -145,7 +156,9 @@ export default class App extends ArcComponent {
           capabilities."
         </p>
         <button class="cta-button" data-action="handleClick">Click Me</button>
-        <p class="counter">You've clicked ${this.mutableState.count} time(s)!</p>
+        <p class="counter">
+          You've clicked ${this.mutableState.count} time(s)!
+        </p>
 
         <div class="footer">
           Made with ❤️ by the ArcNodes Team. Join us on GitHub to contribute and
