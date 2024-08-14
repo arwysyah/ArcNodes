@@ -1,4 +1,4 @@
-import { ArcComponent, html } from "arc-nodes";
+import { ArcComponent, html } from "../../src";
 
 export default class App extends ArcComponent {
   constructor(props) {
@@ -23,14 +23,15 @@ export default class App extends ArcComponent {
       };
     });
   }
-
   initialize() {
     console.log("Initialize equal to didmount");
   }
-
-
+  onDidUpdate(prevProps, prevState) {
+    console.log("Did Update");
+  }
 
   render() {
+    console.log(this.mutableState);
     return html`
       <style>
         @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
