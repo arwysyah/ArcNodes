@@ -1,6 +1,6 @@
 # ArcNodes
 
-ArcNodes is an experimental minimalist and simplified UI lib for creating web applications using pure JavaScript. It includes core concepts of components, state management and utilizing streamlined content rendering for a straightforward development experience.. This documentation provides an overview of how to use ArcNodes, including installation, basic usage, and advanced features.
+ArcNodes is an experimental minimalist and simplified UI Framework for creating web applications using pure JavaScript. It includes core concepts of components, state management and utilizing streamlined content rendering for a straightforward development experience.. This documentation provides an overview of how to use ArcNodes, including installation, basic usage, and advanced features.
 
 ## Features
 
@@ -569,11 +569,11 @@ ChildComponent.registerComponent("child-component");
 ## Routing System Usage
 ### Router
 
-The `Router` class in your library enables easy route management and navigation between different components in your application. Below is a step-by-step guide on how to set up and use the router.
+The `Router` class in your framework enables easy route management and navigation between different components in your application. Below is a step-by-step guide on how to set up and use the router.
 
 ### 1. Import the Router
 
-Start by importing the router from your library. You'll also import the components you want to associate with specific routes.
+Start by importing the router from your framework. You'll also import the components you want to associate with specific routes.
 
 ```javascript
 index.js
@@ -679,4 +679,4 @@ To run this project, you'll need:
 
 ## Note
 
-This library is a work-in-progress and not yet complete. It aims to mimic some of React's functionality using pure JavaScript. Some features may be incomplete or not fully tested. Use it for educational purposes or for experimentation.
+This framework is a work-in-progress and not yet complete. It aims to mimic some of React's functionality using pure JavaScript. Some features may be incomplete or not fully tested. Use it for educational purposes or for experimentation.

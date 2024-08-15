@@ -1,7 +1,7 @@
 {
   "name": "arc-nodes",
-  "version": "0.0.41",
-  "description": "A minimalist UI library based on ArcComponent.",
+  "version": "0.0.42",
+  "description": "A minimalist UI framework based on ArcComponent.",
   "main": "./src/index.js",
   "keywords": [
     "framework",
@@ -14,7 +14,8 @@
     "javascript",
     "minimalist",
     "simple",
-    "web"
+    "web",
+    "node"
   ],
   "author": "Arwy Syahputra Siregar",
   "license": "MIT",
