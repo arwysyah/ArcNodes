@@ -67,6 +67,7 @@ Welcome to the Arc Component System! This guide will help you understand how to 
 - [Styling](#styling)
 - [CSS File Import](#css-file-import-support)
 - [Lifecycle Methods](#lifecycle-methods)
+- [List Rendering](#listcontainer-list-rendering)
 - [Routing System](#routing-system-usage)
 
 ## Introduction
@@ -563,6 +564,152 @@ export default class ChildComponent extends ArcComponent {
 ChildComponent.registerComponent("child-component");
 ```
 
+
+---
+
+# ListContainer (List rendering)
+
+```javascript
+import { ListContainer } from 'arc-nodes';
+```
+
+## API
+
+### `ListContainer(items, options = {})`
+
+Display a container element with a list of items.
+
+#### Parameters
+
+- **items** (`Array`): The list of items to display. Each item can be a value or an object specifying the tag and attributes.
+- **options** (`Object`, optional): Configuration options for the container.
+  - **className** (`string`, optional): CSS class for the container. Default is `'list-container'`.
+  - **attributes** (`Object`, optional): Additional attributes to set on the container. For example, `{ id: 'my-container' }`.
+  - **style** (`Object`, optional): Inline styles to apply to the container. For example, `{ backgroundColor: 'lightgray' }`.
+  - **itemRenderer** (`Function`, optional): Function to render each item. Receives the item as an argument and returns a DOM element. Default is a function that creates `<li>` elements for objects and text nodes for primitive values.
+
+#### Returns
+
+- **HTMLElement**: The container element with the list of items.
+
+## Usage
+
+### Basic Usage
+
+```javascript
+import { ListContainer } from 'arc-nodes';
+
+// Create a container with basic items
+const items = ['Item 1', 'Item 2', 'Item 3'];
+const container = ListContainer(items, {
+  className: 'my-list-container',
+});
+document.body.appendChild(container);
+```
+
+### Usage in ArcComponent
+
+Here’s how to use `ListContainer` in an `ArcComponent`:
+
+```javascript
+import { ArcComponent, html, ListContainer } from 'arc-nodes';
+import './css/child.css';
+
+export default class Child extends ArcComponent {
+  constructor(props) {
+    super(props);
+    this.mutableState = {
+      count: this.props.counter || 0,
+    };
+    this.handleIncrement = this.handleIncrement.bind(this);
+  }
+
+  handleIncrement() {
+    this.props.handle(); // Call a function passed as a prop
+  }
+
+  customItemRenderer(item) {
+    const element = document.createElement('div');
+    element.textContent = item.content || item;
+    element.style.color = item.color || 'black';
+    return element;
+  }
+
+  render() {
+    // Create a list container with dynamic items
+    const listContainer = ListContainer(this.props.items || [], {
+      className: this.props.containerClass || 'list-container',
+      attributes: this.props.containerAttributes || {},
+      style: this.props.containerStyle || {},
+      itemRenderer: this.customItemRenderer, // Pass custom renderer
+    });
+
+    return html`
+      <div class="child-container">
+        <h1 class="child-title">Child Component</h1>
+        <p class="child-counter">
+          Counter: ${this.mutableState.count}
+        </p>
+        ${listContainer}
+        <button class="child-button" data-action="handleIncrement">Increment</button>
+      </div>
+    `;
+  }
+}
+```
+
+### Advanced Usage
+
+#### Using a Custom Renderer
+
+```javascript
+import { ListContainer } from 'arc-nodes';
+
+// Custom renderer function
+function customItemRenderer(item) {
+  const element = document.createElement('div');
+  element.textContent = item.content || item;
+  element.style.color = item.color || 'black';
+  return element;
+}
+
+// Create a container with custom item rendering
+const items = [
+  { content: 'Item 1', color: 'red' },
+  { content: 'Item 2', color: 'blue' },
+  'Item 3', // Fallback for default rendering
+];
+const container = ListContainer(items, {
+  className: 'my-custom-list-container',
+  style: { padding: '10px' },
+  itemRenderer: customItemRenderer,
+});
+document.body.appendChild(container);
+```
+
+#### Applying Inline Styles and Attributes
+
+```javascript
+import { ListContainer } from 'arc-nodes';
+
+// Create a container with custom styles and attributes
+const items = ['Item 1', 'Item 2', 'Item 3'];
+const container = ListContainer(items, {
+  className: 'styled-list-container',
+  attributes: { 'data-role': 'list' },
+  style: { border: '1px solid black', padding: '5px' },
+});
+html`<div>${container}<div>`
+```
+
+## Notes
+
+- The `itemRenderer` function should return a valid DOM element.
+- The default renderer creates `<li>` elements for objects with a `tag` property and text nodes for primitive values. Customize it as needed.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ---
 

@@ -1,5 +1,7 @@
 import { mountNestedComponents } from "./mountNestedComponent";
 import { setupEventListeners } from "./setupEventListener";
+import { isEncoded } from "./utils/encoderChecker";
+import { convertStringToFunction } from "./utils/functionConverter";
 
 const components = {}; // Global registry for components
 
@@ -7,10 +9,6 @@ const components = {}; // Global registry for components
  * Base class for creating components in the Arc framework.
  * Provides lifecycle methods, state management, and rendering capabilities.
  */
-function isURLEncoded(str) {
-  // Check if the string contains any encoded characters
-  return /%[0-9A-Fa-f]{2}/.test(str);
-}
 
 
 export default class ArcComponent {
@@ -33,39 +31,48 @@ export default class ArcComponent {
     if (!this.constructor.componentName) {
       this.constructor.componentName = this.constructor.name.toLowerCase();
     }
-
   }
 
   /**
- * Parses and processes the properties (props) for the component.
- * This method converts JSON-encoded strings into their respective data types
- * and handles any values that fail to parse as JSON.
- *
- * @param {Object} props - An object containing properties as key-value pairs,
- * where values may be JSON-encoded strings.
- * 
- * @returns {Object} An object with properties where JSON-encoded strings
- * are parsed back into their original data types, and other values are used as-is.
- * 
- *  /** */
-
+   * Parses and processes the properties (props) for the component.
+   * This method converts JSON-encoded strings into their respective data types
+   * and handles any values that fail to parse as JSON.
+   *
+   * @param {Object} props - An object containing properties as key-value pairs,
+   * where values may be JSON-encoded strings.
+   *
+   * @returns {Object} An object with properties where JSON-encoded strings
+   * are parsed back into their original data types, and other values are used as-is.
+   *
+   *  /** */
 
   parseProps(props) {
     const parsedProps = {};
-    
+
     for (const [key, value] of Object.entries(props)) {
-      const isEncodeElement = isURLEncoded(value)
-      if(isEncodeElement){
+      const isEncodeElement = isEncoded(value);
+      if (isEncodeElement) {
         const decoded = decodeURIComponent(value);
-        parsedProps[key] =   JSON.parse(decoded);
-      }else {
-      try {
-        parsedProps[key] = JSON.parse(value);
-        
-      } catch (e) {
-        parsedProps[key] = value; 
+        try {
+          parsedProps[key] = JSON.parse(decoded);
+        } catch (error) {
+          if (decoded.includes("function")) {
+            if (decoded.includes("native code")) {
+              throw new Error("You can not pass function that already binded");
+            } else {
+              parsedProps[key] = convertStringToFunction(decoded.toString());
+            }
+          } else {
+            parsedProps[key] = decoded;
+          }
+        }
+      } else {
+        try {
+          parsedProps[key] = JSON.parse(value);
+        } catch (e) {
+          parsedProps[key] = value;
+        }
       }
-    }
     }
     return parsedProps;
   }
@@ -110,20 +117,26 @@ export default class ArcComponent {
    */
   applyChanges(stateUpdater) {
     const prevState = Array.isArray(this.mutableState)
-    // Create a shallow copy of the array
-      ? [...this.mutableState]   
-      // Create a shallow copy of the object
-      : { ...this.mutableState }; 
+      ? // Create a shallow copy of the array
+        [...this.mutableState]
+      : // Create a shallow copy of the object
+        {
+          ...this.mutableState,
+        };
 
     // Determine the new state based on the type of stateUpdater
-    const newState = typeof stateUpdater === 'function'
-      ? stateUpdater(prevState)
-      : stateUpdater;
+    const newState =
+      typeof stateUpdater === "function"
+        ? stateUpdater(prevState)
+        : stateUpdater;
 
     // Merge the new state with the existing state
     this.mutableState = Array.isArray(this.mutableState)
-      ? [...newState]              
-      : { ...this.mutableState, ...newState }; 
+      ? [...newState]
+      : {
+          ...this.mutableState,
+          ...newState,
+        };
 
     this.update(prevState);
   }
@@ -135,7 +148,6 @@ export default class ArcComponent {
    */
   update(prevState) {
     const prevProps = this.props;
-   
 
     this.renderedHtml = this.render();
     this.afterUpdate(prevProps, prevState);
@@ -163,7 +175,7 @@ export default class ArcComponent {
    */
   getContainer() {
     return document.querySelector(
-      `[componentKey="${this.constructor.componentName}"]`,
+      `[componentKey="${this.constructor.componentName}"]`
     );
   }
 
