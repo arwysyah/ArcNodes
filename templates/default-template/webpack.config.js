@@ -93,7 +93,7 @@ module.exports = {
             })
             .filter(Boolean)[0];
           console.log(`\x1b[34mNetwork:  http://${networkAddress}:9000\x1b[0m`);
-          console.log("\nNote that the development build is not optimized.");
+          console.log("\nNote that the development build is not optimized yet.");
         }
       });
     },

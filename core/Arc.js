@@ -4,9 +4,15 @@ import { setupEventListeners } from "./setupEventListener";
 const components = {}; // Global registry for components
 
 /**
- * Base class for creating components in the Arc Library.
+ * Base class for creating components in the Arc framework.
  * Provides lifecycle methods, state management, and rendering capabilities.
  */
+function isURLEncoded(str) {
+  // Check if the string contains any encoded characters
+  return /%[0-9A-Fa-f]{2}/.test(str);
+}
+
+
 export default class ArcComponent {
   /**
    * @static
@@ -43,14 +49,23 @@ export default class ArcComponent {
  * 
  *  /** */
 
+
   parseProps(props) {
     const parsedProps = {};
+    
     for (const [key, value] of Object.entries(props)) {
+      const isEncodeElement = isURLEncoded(value)
+      if(isEncodeElement){
+        const decoded = decodeURIComponent(value);
+        parsedProps[key] =   JSON.parse(decoded);
+      }else {
       try {
         parsedProps[key] = JSON.parse(value);
+        
       } catch (e) {
         parsedProps[key] = value; 
       }
+    }
     }
     return parsedProps;
   }
