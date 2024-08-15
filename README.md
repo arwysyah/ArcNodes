@@ -65,6 +65,7 @@ Welcome to the Arc Component System! This guide will help you understand how to 
 - [Nested Components](#nested-components)
 - [Passing Props](#passing-props)
 - [Styling](#styling)
+- [CSS File Import](#css-file-import-support)
 - [Lifecycle Methods](#lifecycle-methods)
 - [Routing System](#routing-system-usage)
 
@@ -253,7 +254,7 @@ Nested components will be automatically rendered if their parent component is re
 
 ## Passing Props
 
-In ArcNodes, props are string with lowercase (at least for now ) you can pass props as JSON strings. This approach ensures that complex objects and arrays are handled consistently. Use JSON.stringify to convert objects and arrays into JSON strings before passing them as props.
+In ArcNodes, props are string with lowercase (at least for now ) you can pass props as JSON strings. This approach ensures that complex objects and arrays are handled consistently. .
 
 ### Defining Props
 
@@ -261,7 +262,7 @@ Props can be passed to components using attributes in the HTML. Inside the compo
 
 ```javascript
 import { ArcComponent, html } from "arc-nodes";
-import ChildComponent from "./ChildComponent.js"; // Ensure the correct path
+import ChildComponent from "./ChildComponent.js"; /
 
 export default class ParentComponent extends ArcComponent {
 
@@ -276,14 +277,13 @@ export default class ParentComponent extends ArcComponent {
   }
 
   render() {
-    // Prepare JSON string props
     const countProps = this.mutableState.count;
-    const itemsProps = JSON.stringify(this.mutableState.items);
+    const itemsProps = this.mutableState.items;
 
     return html`
       <div>
         <h1>Parent Component</h1>
-        <button onclick="${this.handleClick}">Increase Count</button>
+        <button data-action="${this.handleClick}">Increase Count</button>
         <ChildComponent count="${countProps}" items="${itemsProps}"/>
 
       </div>
@@ -381,6 +381,65 @@ class ChildComponent extends ArcComponent {
 ChildComponent.registerComponent("ChildComponent");
 
 ```
+
+Here's a sample `README.md` section that highlights how `ArcNodes` supports importing CSS files:
+
+---
+
+## $CSS File Import Support
+
+`ArcNodes` provides built-in support for importing CSS files directly into your components, allowing you to style your application seamlessly. This feature helps you manage your component-specific styles more effectively and keep your CSS modular.
+
+### How to Import CSS Files
+
+To use CSS files with `ArcNodes`, follow these steps:
+
+1. **Create Your CSS File:**
+
+   Create a CSS file with your desired styles. For example, `styles.css`:
+
+   ```css
+   .app-container {
+     background-color: #f0f0f0;
+     padding: 20px;
+     border: 1px solid #ccc;
+   }
+   ```
+
+2. **Import the CSS File in Your Component:**
+
+   In your ArcNodes component file, import the CSS file at the top of your file. For example:
+
+   ```javascript
+   import './styles.css';
+   
+   class MyComponent extends ArcComponent {
+     render() {
+       return html`
+         <div class="app-container">
+           Hello, this is my styled component!
+         </div>
+       `;
+     }
+   }
+   
+   MyComponent.registerComponent("MyComponent")
+   ```
+
+3. **Use Your Component:**
+
+   Now you can use your component in your application, and the styles will be applied automatically.
+
+### Benefits of Using CSS File Import
+
+- **Modularity:** Keep your styles organized and maintainable by separating them into individual CSS files.
+- **Scoped Styles:** Apply styles specific to components without affecting other parts of your application.
+- **Ease of Use:** Directly import CSS files in your component files for quick styling changes.
+
+
+
+---
+
 ## Lifecycle Methods
 
 ### Overview

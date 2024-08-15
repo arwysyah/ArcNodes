@@ -27,7 +27,7 @@ export default class ArcComponent {
     if (!this.constructor.componentName) {
       this.constructor.componentName = this.constructor.name.toLowerCase();
     }
-    console.log(props,"props")
+
   }
 
   /**
