@@ -53,6 +53,7 @@ export function html(strings, ...values) {
     }
     if (typeof value === "function") {
       throw new Error("Cannot pass functions as props for now. Only primitive values and objects are allowed.");
+      // return `${encodeURIComponent(value)}`;
     }
     return escapeHtml(JSON.stringify(value));
   });
