@@ -36,11 +36,9 @@ export default class App extends ArcComponent {
         <div style="font-size : 40px; font-weight:bold">ArcNodes</div>
         <h1 class="hero-title">${this.mutableState.message}</h1>
         <p class="hero-description">
-          "ArcNodes is a straightforward library designed to help you build web
+          "ArcNodes is a straightforward framework designed to help you build web
           applications. While it is still in early development, it offers a
-          foundation for creating simple and functional user interfaces. The
-          framework aims to provide an easy-to-use approach for developing
-          interactive components and layouts. As development progresses,
+          foundation for creating simple and functional user interfaces. . As development progresses,
           additional features and improvements will be added to enhance its
           capabilities."
         </p>
