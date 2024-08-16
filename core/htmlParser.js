@@ -39,7 +39,8 @@ export function html(strings, ...values) {
   const processedValues = values.map((value) => {
     if (typeof value === "string") {
       // Escape HTML entities in strings
-      return escapeHtml(value);
+      // return escapeHtml(value); // for now lets not prevent from XSS Attack
+        return value;
     }
     if (value === undefined || value === null) {
       return "";
