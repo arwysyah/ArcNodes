@@ -1009,7 +1009,7 @@ To run this project, you'll need:
 2. **Navigate to the project directory:**
 
    ```bash
-   cd ArcNodes
+   cd ArcNodes/example
    npm install
    ```
 
