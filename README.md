@@ -64,9 +64,11 @@ Welcome to the Arc Component System! This guide will help you understand how to 
 - [Unique Component Keys](#unique-component-keys)
 - [Nested Components](#nested-components)
 - [Passing Props](#passing-props)
+- [Function Props](#function)
 - [Styling](#styling)
 - [CSS File Import](#css-file-import-support)
 - [Lifecycle Methods](#lifecycle-methods)
+- [Flatlist](#flatlist-component)
 - [List Rendering](#listcontainer-list-rendering)
 - [Routing System](#routing-system-usage)
 
@@ -109,7 +111,7 @@ MyComponent.registerComponent("MyComponent");
 
 ## Unique Component Keys
 
-When pre-rendering your component and triggering the DOM, it is essential to add a `componentKey` attribute to ensure that each instance of your component is unique. The `componentKey` helps ArcNodes efficiently manage and update components, especially when dealing with child component and sure that is gonna rerender whenever setstae triggered.
+When pre-rendering your component and triggering the DOM, it is essential to add a `componentKey` that equal to Component Name attribute to ensure that each instance of your component is unique. The `componentKey` helps ArcNodes efficiently manage and update components, especially when dealing with child component and sure that is gonna rerender whenever setstae triggered.
 
 ### Example Usage of `componentKey`
 
@@ -124,7 +126,7 @@ export default class MyComponent extends ArcComponent {
     this.mutableState = {
       count: 0,
     };
-    this.handleClick = this.handleClick.bind(this);
+   
   }
 
   handleClick() {
@@ -135,7 +137,7 @@ export default class MyComponent extends ArcComponent {
     return html`
       <div componentKey="MyComponent">
         <p>${this.props.message}</p>
-        <button onclick="${this.handleClick}">Increase Count</button>
+        <button data-action="handleClick">Increase Count</button>
         <p>Count: ${this.mutableState.count}</p>
       </div>
     `;
@@ -180,7 +182,7 @@ export default class MyComponent extends ArcComponent {
     return html`
       <div componentKey="MyComponent">
            <p>${this.props.message}</p>
-        <button onclick="${this.handleClick}">Increase Count</button>
+        <button data-action="this.handleClick">Increase Count</button>
         <p>Count: ${this.mutableState.count}</p>
       </div>
     `;
@@ -284,7 +286,7 @@ export default class ParentComponent extends ArcComponent {
     return html`
       <div>
         <h1>Parent Component</h1>
-        <button data-action="${this.handleClick}">Increase Count</button>
+        <button data-action="handleClick">Increase Count</button>
         <ChildComponent count="${countProps}" items="${itemsProps}"/>
 
       </div>
@@ -317,7 +319,78 @@ When using the component, pass props as attributes:
 or 
 <MyComponent message="Hello, World!" count="5"/>
 ```
+## Function
 
+#### Overview
+
+The `data-action` and `action-params` attributes are powerful tools used in HTML to dynamically trigger JavaScript functions and pass parameters to them based on user interactions, such as clicks. These attributes are particularly useful in scenarios where you want to bind specific functions to elements and control the behavior of those functions through easily customizable parameters.
+
+#### `data-action`
+
+- **Purpose**: 
+  - The `data-action` attribute is used to specify the name of a JavaScript function that should be executed when a user interacts with an HTML element, typically through a click event.
+  
+- **Usage Example**:
+  ```html
+  <p data-action="handleFocus">Click Me</p>
+  ```
+  - In this example, when the `<p>` element is clicked, the function `handleFocus` will be invoked.
+
+#### `action-params`
+
+- **Purpose**:
+  - The `action-params` attribute is used in conjunction with `data-action` to pass specific parameters to the function being called.
+  - The value of `action-params` is usually a string that represents the parameter(s) that should be passed to the function.
+  
+- **Usage Example**:
+  ```html
+  <p data-action="handleFocus" action-params="2">Click Me</p>
+  ```
+  - In this example, when the `<p>` element is clicked, the `handleFocus` function is called with `2` as its argument.
+
+#### How It Works
+
+1. **Event Binding**:
+   - The `data-action` attribute identifies which function to call when the element is clicked.
+   - JavaScript code (often through a helper function like `setupEventListeners`) detects the `data-action` attribute and binds the specified function to the element's click event.
+
+2. **Passing Parameters**:
+   - When the element is clicked, the value specified in the `action-params` attribute is passed as an argument to the function.
+   - This allows the function to perform its tasks using the provided parameters.
+
+#### Practical Example
+
+Suppose you have a function called `handleFocus` in your JavaScript code, and you want it to perform different actions based on which navigation item is clicked:
+
+```html
+<!-- Navigation Items -->
+<p data-action="handleFocus" action-params="0">Home</p>
+<p data-action="handleFocus" action-params="1">Documentation</p>
+<p data-action="handleFocus" action-params="2">Game</p>
+<p data-action="handleFocus" action-params="3">Source</p>
+```
+
+In your JavaScript file:
+
+```javascript
+function handleFocus(params) {
+  console.log(`Item ${params} was clicked`);
+  // Additional logic based on params
+}
+```
+
+- Clicking on "Home" calls `handleFocus(0)`.
+- Clicking on "Documentation" calls `handleFocus(1)`.
+- Clicking on "Game" calls `handleFocus(2)`.
+- Clicking on "Source" calls `handleFocus(3)`.
+
+This setup makes your code modular and easy to maintain, as you can control the behavior of your functions directly from the HTML structure.
+
+#### Summary
+
+- **`data-action`**: Specifies the function to be triggered on user interaction.
+- **`action-params`**: Passes parameters to the triggered function, allowing for dynamic and context-sensitive function execution.
+- Together, they provide a flexible and powerful way to manage event-driven functionality in your web application.
 
 ### Styling
 
@@ -383,11 +456,9 @@ ChildComponent.registerComponent("ChildComponent");
 
 ```
 
-Here's a sample `README.md` section that highlights how `ArcNodes` supports importing CSS files:
-
 ---
 
-## $CSS File Import Support
+## CSS File Import Support
 
 `ArcNodes` provides built-in support for importing CSS files directly into your components, allowing you to style your application seamlessly. This feature helps you manage your component-specific styles more effectively and keep your CSS modular.
 
@@ -499,7 +570,7 @@ export default class ParentComponent extends ArcComponent {
   constructor(props) {
     super(props);
     this.mutableState = { count: 0 };
-    this.handleClick = this.handleClick.bind(this);
+   
   }
 
   handleClick() {
@@ -566,6 +637,124 @@ ChildComponent.registerComponent("child-component");
 
 
 ---
+
+### Flatlist Component 
+
+#### Overview
+The `Flatlist` component is a utility function designed to render a list of items as HTML. It allows for customization through class names, inline styles, and a unique key for the component. The component accepts an array of data and a function to render each item in the list.
+
+#### Parameters
+
+- **data** (`Array`): 
+  - An array of data items to be rendered.
+  - Default value: `[]`.
+  - Each item in the array is passed to the `renderItem` function for rendering.
+
+- **renderItem** (`Function`): 
+  - A function responsible for rendering each item in the list.
+  - This function receives an object with a single key `item`, representing the current data item, and the index of the item as arguments.
+  - Returns an HTML string for each item.
+
+- **options** (`Object`): 
+  - An optional configuration object for customizing the list rendering.
+  - Default value: `{}`.
+  - **options.className** (`string`): 
+    - A string to be used as the `class` attribute of the container `<div>`.
+    - Default value: `""`.
+  - **options.style** (`Object`): 
+    - An object representing inline CSS styles for the container `<div>`.
+    - Default value: `{}`.
+  - **options.componentKey** (`string`): 
+    - A unique identifier for the component, which is set as a `data-key` attribute on the container `<div>`.
+    - Default value: `"Flatlist"`.
+
+#### Returns
+
+- **HTML string**: The function returns an HTML string representing the list, wrapped in a `<div>` element with the specified class name, styles, and component key.
+
+#### Usage Example
+
+Here’s an example of how to use the `Flatlist` component:
+
+```javascript
+
+const items = [
+  {
+    content: "Home",
+    route: "header",
+  },
+  {
+    content: "Documentation",
+    route: "documentation",
+  },
+  {
+    content: "Game",
+    route: "game",
+  },
+  {
+    content: "Source",
+  },
+];
+class HeaderComponent extends ArcComponent {
+  constructor() {
+    super();
+    this.mutableState = {
+      focus: 0,
+      item: items,
+    };
+
+  }
+  handleFocus(params) {
+    this.applyChanges({ focus: params });
+   
+  }
+
+  render() {
+    const listContainer = Flatlist({
+      options: {
+        className: "container",
+      },
+      data: this.mutableState.item,
+      renderItem: ({ item }, index) =>
+        html`<p
+          data-action="handleFocus"
+          class=${this.mutableState.focus == index ? "downloads" : "inaction"}
+          action-params=${index}
+        >
+          ${item.content}
+        </p> `,
+    });
+
+    return html`
+      <header class="header">
+        <div class="container" id="header">
+      
+          <div class="logo">
+            <img src="../public/logo.png" alt="Giant Logo" />
+          </div>
+          <nav>
+            <ul>
+              ${listContainer}
+            </ul>
+          </nav>
+        </div>
+      </header>
+    `;
+  }
+}
+
+HeaderComponent.registerComponent("HeaderComponent");
+
+export default HeaderComponent;
+```
+
+#### Explanation
+
+- **data**: An array of objects where each object represents an item in the list.
+- **renderItem**: A function that generates the HTML for each item. In this example, it returns a `<div>` containing an item name and description.
+- **options**: Configures the container's class, style, and component key. The list will be wrapped in a `<div>` with these attributes.
+- **listHTML**: The resulting HTML string from the `Flatlist` function, ready to be inserted into the DOM.
+
 
 # ListContainer (List rendering)
 
