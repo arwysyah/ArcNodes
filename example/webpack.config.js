@@ -54,6 +54,7 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin(),
     function () {
       this.hooks.done.tap("DonePlugin", (stats) => {
+
         console.log('\x1b[33m    Welcome to ArcNodes! \x1b[0m \n');
         console.log('\x1b[32mCompiled successfully!\x1b[0m \n');
 

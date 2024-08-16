@@ -1,6 +1,6 @@
 {
   "name": "arc-nodes",
-  "version": "0.0.44",
+  "version": "0.0.45",
   "description": "A minimalist UI framework based on ArcComponent.",
   "main": "./src/index.js",
   "keywords": [

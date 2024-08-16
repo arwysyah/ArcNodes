@@ -1,3 +1,5 @@
+import { html } from "../htmlParser";
+
 /**
  * Renders a list of items within a container div, allowing for dynamic item rendering.
  *
