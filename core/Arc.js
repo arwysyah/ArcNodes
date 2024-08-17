@@ -1,5 +1,6 @@
 import { mountNestedComponents } from "./mountNestedComponent";
 import { setupEventListeners } from "./setupEventListener";
+import { injectComponentKey } from "./utils/componentKeyInjector";
 import { isEncoded } from "./utils/encoderChecker";
 import { convertStringToFunction } from "./utils/functionConverter";
 
@@ -9,7 +10,6 @@ const components = {}; // Global registry for components
  * Base class for creating components in the Arc framework.
  * Provides lifecycle methods, state management, and rendering capabilities.
  */
-
 
 export default class ArcComponent {
   /**
@@ -83,7 +83,8 @@ export default class ArcComponent {
    */
   renderComponent() {
     const content = this.render();
-    const componentKey = this.constructor.componentName || this.constructor.name;
+    const componentKey =
+      this.constructor.componentName || this.constructor.name;
     return injectComponentKey(content, componentKey);
   }
   // renderComponent() {
@@ -180,7 +181,7 @@ export default class ArcComponent {
    */
   getContainer() {
     return document.querySelector(
-      `[componentKey="${this.constructor.componentName}"]`
+      `[componentKey="${this.constructor.componentName}"]`,
     );
   }
 
