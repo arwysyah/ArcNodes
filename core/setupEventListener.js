@@ -1,4 +1,5 @@
-import { isEncoded } from "arc-nodes/core/utils/encoderChecker";
+import { isEncoded } from "./utils/encoderChecker";
+
 
 /**
  * Sets up event listeners for elements within the specified container that have `data-action` attributes.
