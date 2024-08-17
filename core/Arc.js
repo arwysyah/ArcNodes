@@ -83,8 +83,13 @@ export default class ArcComponent {
    */
   renderComponent() {
     const content = this.render();
-    return `<div componentKey="${this.constructor.componentName}">${content}</div>`;
+    const componentKey = this.constructor.componentName || this.constructor.name;
+    return injectComponentKey(content, componentKey);
   }
+  // renderComponent() {
+  //   const content = this.render();
+  //   return `<div componentKey="${this.constructor.componentName}">${content}</div>`;
+  // }
 
   /**
    * Registers the component with a specified name in the global registry.
