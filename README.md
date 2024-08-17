@@ -61,7 +61,7 @@ Welcome to the Arc Component System! This guide will help you understand how to 
 
 - [Introduction](#introduction)
 - [Basic Usage](#basic-usage)
-- [Unique Component Keys](#unique-component-keys)
+- [Unique Component Keys (deprecated)](#unique-component-keys-deprecated)
 - [Nested Components](#nested-components)
 - [Passing Props](#passing-props)
 - [Function Props](#function)
@@ -109,104 +109,20 @@ MyComponent.registerComponent("MyComponent");
 
 
 
-## Unique Component Keys
+Here’s the revised README section with a note indicating that `componentKey` is now automatically injected:
 
-When pre-rendering your component and triggering the DOM, it is essential to add a `componentKey` that equal to Component Name attribute to ensure that each instance of your component is unique. The `componentKey` helps ArcNodes efficiently manage and update components, especially when dealing with child component and sure that is gonna rerender whenever setstae triggered.
+---
 
-### Example Usage of `componentKey`
+## Unique Component Keys (Deprecated)
 
-Ensure that each component has a unique `componentKey` when rendering:
+~~When pre-rendering your component and triggering the DOM, it is essential to add a `componentKey` that is equal to the Component Name attribute to ensure that each instance of your component is unique. The `componentKey` helps ArcNodes efficiently manage and update components, especially when dealing with child components and ensuring that they re-render whenever `setState` is triggered.~~
 
-```javascript
-import { ArcComponent, html } from "arc-nodes";
-
-export default class MyComponent extends ArcComponent {
-  constructor(props) {
-    super(props);
-    this.mutableState = {
-      count: 0,
-    };
-   
-  }
-
-  handleClick() {
-    this.applyChanges({ count: this.mutableState.count + 1 });
-  }
-
-  render() {
-    return html`
-      <div componentKey="MyComponent">
-        <p>${this.props.message}</p>
-        <button data-action="handleClick">Increase Count</button>
-        <p>Count: ${this.mutableState.count}</p>
-      </div>
-    `;
-  }
-
-  initialize() {
-    console.log("Component initialized");
-  }
-
-  onDidUpdate(prevProps, prevState) {
-    console.log("Component updated");
-  }
-
-  onDestroy() {
-    console.log("Component destroyed");
-  }
-}
-
-// Register the component
-MyComponent.registerComponent("MyComponent");
-
-OR 
+**Note:** As of the latest update, the `componentKey` is automatically injected based on the component name. You no longer need to manually specify `componentKey` in your component templates.
 
 
-import { ArcComponent, html } from "arc-nodes";
-import ChildComponent from "./ChildComponent.js";
-
-export default class MyComponent extends ArcComponent {
- constructor(props) {
-    super(props);
-    this.mutableState = {
-      count: 0,
-    };
-    this.handleClick = this.handleClick.bind(this);
-  }
-
-  handleClick() {
-    this.applyChanges({ count: this.mutableState.count + 1 });
-  }
-
-  render() {
-    return html`
-      <div componentKey="MyComponent">
-           <p>${this.props.message}</p>
-        <button data-action="this.handleClick">Increase Count</button>
-        <p>Count: ${this.mutableState.count}</p>
-      </div>
-    `;
-  }
-
-  initialize() {
-    console.log("Parent component initialized");
-  }
-
-  onDidUpdate(prevProps, prevState) {
-    console.log("Parent component updated");
-  }
-
-  onDestroy() {
-    console.log("Parent component destroyed");
-  }
-}
-
-// Register the component
-MyComponent.registerComponent("MyComponent");
-```
+---
 
 
-By including `componentKey` in your components, you ensure that each instance is correctly identified and managed within the DOM.
 ## Nested Components
 
 
@@ -1016,3 +932,6 @@ To run this project, you'll need:
 ## Note
 
 This framework is a work-in-progress and not yet complete. It aims to mimic some of React's functionality using pure JavaScript. Some features may be incomplete or not fully tested. Use it for educational purposes or for experimentation.
+
+
+
