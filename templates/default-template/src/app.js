@@ -21,9 +21,6 @@ export default class App extends ArcComponent {
     }));
   }
 
-  initialize() {
-    console.log("Initialize equal to didmount");
-  }
 
   render() {
     const ChildComponent = new Child({incrementCounter:this.handleClick,counter:this.mutableState.count});

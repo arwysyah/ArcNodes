@@ -1,4 +1,4 @@
-import { html,ArcComponent } from '../../src';
+import { html, ArcComponent } from "../../src";
 import "./css/styles.css";
 
 class Game extends ArcComponent {
@@ -12,7 +12,8 @@ class Game extends ArcComponent {
     };
   }
 
-  startGame() {
+  startGame = () => {
+  
     if (this.mutableState.isPlaying) return;
 
     this.applyChanges({
@@ -32,9 +33,9 @@ class Game extends ArcComponent {
     }, 1000);
 
     this.applyChanges({ intervalId });
-  }
+  };
 
-  stopGame() {
+  stopGame = () => {
     if (!this.mutableState.isPlaying) return;
 
     clearInterval(this.mutableState.intervalId);
@@ -42,57 +43,54 @@ class Game extends ArcComponent {
       isPlaying: false,
       intervalId: null,
     });
-  }
+  };
 
-  handleButtonClick() {
+  handleButtonClick = () => {
     if (this.mutableState.isPlaying) {
       this.applyChanges((prevState) => ({
         score: prevState.score + 1,
       }));
     }
-  }
+  };
 
   render() {
     return html`
-      <div class="full-height-container">
-      <div class="game">
-        <h1>Score: ${this.mutableState.score}</h1>
-        <h2>Time Left: ${this.mutableState.timer}s</h2>
-        ${!this.mutableState.isPlaying
-          ? html`
-              <button
-                data-action="startGame"
-                class="game-button"
-              >
-                Start Game
-              </button>
-            `
-          : html`
-              <button
-                data-action="stopGame"
-                class="game-button"
-                class="stop-button"
-              >
-                Stop Game
-              </button>
-            `}
-        ${this.mutableState.isPlaying
-          ? html`
-              <button
-                data-action="handleButtonClick"
-                class="game-button"
-              >
-                Click Me!
-              </button>
-            `
-          : html``}
-        ${!this.mutableState.isPlaying && this.mutableState.timer === 0
-          ? html`
-              <h3>Game Over! Your final score is ${this.mutableState.score}</h3>
-            `
-          : html``}
+      <div class="full-height-container" componentKey="Game">
+        <div class="game">
+          <h1>Score: ${this.mutableState.score}</h1>
+          <h2>Time Left: ${this.mutableState.timer}s</h2>
+          ${!this.mutableState.isPlaying
+            ? html`
+                <button onclick=${this.startGame} class="game-button">
+                  Start Game
+                </button>
+              `
+            : html`
+                <button
+                  button
+                  onclick=${this.stopGame}
+                  class="game-button"
+                  class="stop-button"
+                >
+                  Stop Game
+                </button>
+              `}
+          ${this.mutableState.isPlaying
+            ? html`
+                <button onclick=${this.handleButtonClick} class="game-button">
+                  Click Me!
+                </button>
+              `
+            : html``}
+          ${!this.mutableState.isPlaying && this.mutableState.timer === 0
+            ? html`
+                <h3>
+                  Game Over! Your final score is ${this.mutableState.score}
+                </h3>
+              `
+            : html``}
+        </div>
       </div>
-        </div >
     `;
   }
 }

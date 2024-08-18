@@ -65,7 +65,7 @@ Welcome to the Arc Component System! This guide will help you understand how to 
 - [Unique Component Keys (deprecated)](#unique-component-keys-deprecated)
 - [Nested Components](#nested-components)
 - [Passing Props](#passing-props)
-- [Function Props](#function)
+- [Handling Event Handlers in `map` with Function IDs](#handling-event-handlers-in-map-with-function-ids)
 - [Styling](#styling)
 - [CSS File Import](#css-file-import-support)
 - [Lifecycle Methods](#lifecycle-methods)
@@ -106,7 +106,6 @@ MyComponent.registerComponent("MyComponent");
 
 ---
 
-Here's a draft for the README to highlight the breaking changes and guide users through the transition:
 
 ---
 
@@ -262,15 +261,57 @@ Switching to component instantiation provides several operational benefits:
 
 The new version of ArcNodes introduces a more flexible and controlled way of managing components. By switching from tag-based to instance-based component creation, you gain greater control over component lifecycle and state management and props. Ensure that all components are instantiated correctly and that names are unique to avoid conflicts.
 
+
 ---
 
 ## Unique Component Keys (Deprecated)
 
-~~When pre-rendering your component and triggering the DOM, it is essential to add a `componentKey` that is equal to the Component Name attribute to ensure that each instance of your component is unique. The `componentKey` helps ArcNodes efficiently manage and update components, especially when dealing with child components and ensuring that they re-render whenever `setState` is triggered.~~
+**Note:** As of the latest update, the `componentKey` is automatically injected based on the component name if you declared componet with instance. You no longer need to manually specify `componentKey` in your component templates except with tag. This change simplifies component management and ensures that each instance of your component is uniquely identified without requiring additional configuration.
 
-**Note:** As of the latest update, the `componentKey` is automatically injected based on the component name. You no longer need to manually specify `componentKey` in your component templates.
+### Previous Requirement
+
+Previously, when declaring a component with a tag, you had to specify a `componentKey` that matched the component name:
+example:
+```html
+<Game componentKey="Game"></Game>
+```
+
+### Current Approach
+
+With the latest update, you no longer need to include the `componentKey`. The system will automatically handle it based on the component name.
+
+```javascript
+const GameComponent = new Game();
+html`${GameComponent.run()}`;
+```
+
+
+When working with nested components, the way you declare them affects the use of `componentKey`.
+
+### Declaring with a Tag
+
+If you declare a component using a tag, you should ensure that the `componentKey` matches the tag name or the registered component name. For example:
+
+```html
+<Game componentKey="Game"></Game>
+```
+
+Here, `componentKey` should be the same as the tag name or the registered name of the component.
+
+### Declaring with an Instance
+
+When you declare a component using an instance, you do not need to specify a `componentKey`. For instance:
+
+```javascript
+const GameComponent = new Game();
+html`${GameComponent.run()}`;
+```
+
+In this case, the `componentKey` is managed automatically, and you do not need to declare it separately.
 
 ---
+
+This update streamlines component management and ensures consistent behavior across different component declarations.
 
 ## Nested Components
 
@@ -317,7 +358,7 @@ ParentComponent.registerComponent("ParentComponent");
 
 ### Rendering Nested Components
 
-Nested components will be automatically rendered if their parent component is rendered using `renderComponent`.
+Nested components will be automatically rendered if their parent component is rendered using `renderComponent` with `componentKey`.
 
 ## Passing Props
 
@@ -383,6 +424,53 @@ When using the component, pass props as attributes:
 const MyComponent = new Component({ name: "Arwy" });
 return html`${MyComponent.run()}`;
 ```
+
+
+---
+
+## Handling Event Handlers in `map` with Function IDs
+
+When mapping over arrays to create dynamic HTML elements with event handlers, it is essential to manage these handlers correctly to ensure that events are handled as expected. For this purpose, you can use unique function IDs to bind your event handlers. This approach helps in associating the correct handler function with each HTML element.
+
+### Example Usage
+
+In your code, you can use the following pattern to bind event handlers when iterating over an array:
+
+```javascript
+const list = this.mutableState.item
+  .map((el, index) => {
+    // Create a unique function ID for each handler
+    const functionId = `function_${index}`;
+
+    // Bind the event handler function to the current index
+    window[functionId] = this.handleFocus.bind(this, index);
+
+    return html`
+      <p
+        onclick=${functionId}  // Assign the function ID to the onclick event
+        action-params=${1}
+        class=${this.mutableState.focus == index ? "downloads" : "inaction"}
+      >
+        ${el.content}
+      </p>`;
+  })
+  .join("");
+```
+
+### Explanation
+
+- **Function ID Creation**: Each function ID is generated using the index from the `map` method, ensuring that each handler function is unique.
+- **Binding the Function**: The `handleFocus` method is bound to the current index using `bind`, and the resulting function is assigned to a global variable with the generated function ID.
+- **Assigning the Handler**: The `onclick` attribute of the HTML element is set to the function ID, which allows the corresponding handler function to be called when the event is triggered.
+
+This pattern ensures that each HTML element has its own unique event handler, which can help avoid issues related to event handling conflicts or unintended behavior.
+
+### Notes
+
+- Ensure that `window[functionId]` is appropriately cleaned up if you are dynamically adding and removing elements to prevent memory leaks or conflicts with other parts of your code.
+- Consider refactoring this approach if the global scope management becomes cumbersome, or if the number of dynamically created handlers becomes large.
+
+---
 
 ### Styling
 
