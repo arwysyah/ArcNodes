@@ -13,7 +13,6 @@ ArcNodes is an experimental minimalist and simplified UI Framework for creating 
 ## Installation
 
 To install ArcNodes, use npm:
-
 ```bash
 npm install -g arc-nodes
 ```
@@ -1081,6 +1080,65 @@ To run this project, you'll need:
    npm install
    ```
 
+
+
+Here's a README section addressing the issue with too many open files and how to resolve it:
+
+---
+
+## Troubleshooting: EMFILE Error
+
+If you encounter the following error:
+
+```
+Error: EMFILE: too many open files, watch '/path/to/file'
+```
+
+This error typically occurs when the system runs out of file watchers due to too many open files or watchers. This is a common issue in Node.js applications, particularly when using tools that watch for file changes.
+
+### Solution
+
+To resolve this issue, you can try the following steps one by one :
+
+1. **Install Dependencies** (Suggestion)
+
+   Run the following command to ensure all your project dependencies are correctly installed by reinstall node modules:
+
+   ```bash
+   npm install
+   ```
+
+2. **Increase File Watcher Limits**
+
+   If the problem persists, you may need to increase the number of file watchers allowed by your system. On Unix-based systems (e.g., Linux, macOS), you can do this by increasing the `fs.inotify.max_user_watches` limit:
+
+   - **Linux:**
+
+     ```bash
+     sudo sysctl fs.inotify.max_user_watches=524288
+     sudo sysctl -p
+     ```
+
+   - **macOS:**
+
+     On macOS, you can increase the file descriptor limit by modifying the `launchctl` configuration:
+
+     ```bash
+     sudo launchctl limit maxfiles 65536 200000
+     ```
+
+   Restart your development environment after making these changes to apply them.
+
+3. **Check for Excessive Watchers**
+
+   Ensure that your development tools and processes are not creating excessive watchers. Review your project configuration and dependencies to optimize file watching.
+
+4. **Restart Your Development Environment**
+
+   Sometimes, simply restarting your development environment or machine can resolve temporary issues with file watchers.
+
+---
+\\
 ## Note
 
 This framework is a work-in-progress and not yet complete. It aims to mimic some of React's functionality using pure JavaScript. Some features may be incomplete or not fully tested. Use it for educational purposes or for experimentation.
