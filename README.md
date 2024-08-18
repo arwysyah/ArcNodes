@@ -13,7 +13,6 @@ ArcNodes is an experimental minimalist and simplified UI Framework for creating 
 ## Installation
 
 To install ArcNodes, use npm:
-
 ```bash
 npm install -g arc-nodes
 ```
@@ -65,7 +64,7 @@ Welcome to the Arc Component System! This guide will help you understand how to 
 - [Unique Component Keys (deprecated)](#unique-component-keys-deprecated)
 - [Nested Components](#nested-components)
 - [Passing Props](#passing-props)
-- [Function Props](#function)
+- [Handling Event Handlers in `map` with Function IDs](#handling-event-handlers-in-map-with-function-ids)
 - [Styling](#styling)
 - [CSS File Import](#css-file-import-support)
 - [Lifecycle Methods](#lifecycle-methods)
@@ -106,7 +105,6 @@ MyComponent.registerComponent("MyComponent");
 
 ---
 
-Here's a draft for the README to highlight the breaking changes and guide users through the transition:
 
 ---
 
@@ -262,15 +260,57 @@ Switching to component instantiation provides several operational benefits:
 
 The new version of ArcNodes introduces a more flexible and controlled way of managing components. By switching from tag-based to instance-based component creation, you gain greater control over component lifecycle and state management and props. Ensure that all components are instantiated correctly and that names are unique to avoid conflicts.
 
+
 ---
 
 ## Unique Component Keys (Deprecated)
 
-~~When pre-rendering your component and triggering the DOM, it is essential to add a `componentKey` that is equal to the Component Name attribute to ensure that each instance of your component is unique. The `componentKey` helps ArcNodes efficiently manage and update components, especially when dealing with child components and ensuring that they re-render whenever `setState` is triggered.~~
+**Note:** As of the latest update, the `componentKey` is automatically injected based on the component name if you declared componet with instance. You no longer need to manually specify `componentKey` in your component templates except with tag. This change simplifies component management and ensures that each instance of your component is uniquely identified without requiring additional configuration.
 
-**Note:** As of the latest update, the `componentKey` is automatically injected based on the component name. You no longer need to manually specify `componentKey` in your component templates.
+### Previous Requirement
+
+Previously, when declaring a component with a tag, you had to specify a `componentKey` that matched the component name:
+example:
+```html
+<Game componentKey="Game"></Game>
+```
+
+### Current Approach
+
+With the latest update, you no longer need to include the `componentKey`. The system will automatically handle it based on the component name.
+
+```javascript
+const GameComponent = new Game();
+html`${GameComponent.run()}`;
+```
+
+
+When working with nested components, the way you declare them affects the use of `componentKey`.
+
+### Declaring with a Tag
+
+If you declare a component using a tag, you should ensure that the `componentKey` matches the tag name or the registered component name. For example:
+
+```html
+<Game componentKey="Game"></Game>
+```
+
+Here, `componentKey` should be the same as the tag name or the registered name of the component.
+
+### Declaring with an Instance
+
+When you declare a component using an instance, you do not need to specify a `componentKey`. For instance:
+
+```javascript
+const GameComponent = new Game();
+html`${GameComponent.run()}`;
+```
+
+In this case, the `componentKey` is managed automatically, and you do not need to declare it separately.
 
 ---
+
+This update streamlines component management and ensures consistent behavior across different component declarations.
 
 ## Nested Components
 
@@ -317,7 +357,7 @@ ParentComponent.registerComponent("ParentComponent");
 
 ### Rendering Nested Components
 
-Nested components will be automatically rendered if their parent component is rendered using `renderComponent`.
+Nested components will be automatically rendered if their parent component is rendered using `renderComponent` with `componentKey`.
 
 ## Passing Props
 
@@ -383,6 +423,53 @@ When using the component, pass props as attributes:
 const MyComponent = new Component({ name: "Arwy" });
 return html`${MyComponent.run()}`;
 ```
+
+
+---
+
+## Handling Event Handlers in `map` with Function IDs
+
+When mapping over arrays to create dynamic HTML elements with event handlers, it is essential to manage these handlers correctly to ensure that events are handled as expected. For this purpose, you can use unique function IDs to bind your event handlers. This approach helps in associating the correct handler function with each HTML element.
+
+### Example Usage
+
+In your code, you can use the following pattern to bind event handlers when iterating over an array:
+
+```javascript
+const list = this.mutableState.item
+  .map((el, index) => {
+    // Create a unique function ID for each handler
+    const functionId = `function_${index}`;
+
+    // Bind the event handler function to the current index
+    window[functionId] = this.handleFocus.bind(this, index);
+
+    return html`
+      <p
+        onclick=${functionId}  // Assign the function ID to the onclick event
+        action-params=${1}
+        class=${this.mutableState.focus == index ? "downloads" : "inaction"}
+      >
+        ${el.content}
+      </p>`;
+  })
+  .join("");
+```
+
+### Explanation
+
+- **Function ID Creation**: Each function ID is generated using the index from the `map` method, ensuring that each handler function is unique.
+- **Binding the Function**: The `handleFocus` method is bound to the current index using `bind`, and the resulting function is assigned to a global variable with the generated function ID.
+- **Assigning the Handler**: The `onclick` attribute of the HTML element is set to the function ID, which allows the corresponding handler function to be called when the event is triggered.
+
+This pattern ensures that each HTML element has its own unique event handler, which can help avoid issues related to event handling conflicts or unintended behavior.
+
+### Notes
+
+- Ensure that `window[functionId]` is appropriately cleaned up if you are dynamically adding and removing elements to prevent memory leaks or conflicts with other parts of your code.
+- Consider refactoring this approach if the global scope management becomes cumbersome, or if the number of dynamically created handlers becomes large.
+
+---
 
 ### Styling
 
@@ -993,6 +1080,65 @@ To run this project, you'll need:
    npm install
    ```
 
+
+
+Here's a README section addressing the issue with too many open files and how to resolve it:
+
+---
+
+## Troubleshooting: EMFILE Error
+
+If you encounter the following error:
+
+```
+Error: EMFILE: too many open files, watch '/path/to/file'
+```
+
+This error typically occurs when the system runs out of file watchers due to too many open files or watchers. This is a common issue in Node.js applications, particularly when using tools that watch for file changes.
+
+### Solution
+
+To resolve this issue, you can try the following steps one by one :
+
+1. **Install Dependencies** (Suggestion)
+
+   Run the following command to ensure all your project dependencies are correctly installed by reinstall node modules:
+
+   ```bash
+   npm install
+   ```
+
+2. **Increase File Watcher Limits**
+
+   If the problem persists, you may need to increase the number of file watchers allowed by your system. On Unix-based systems (e.g., Linux, macOS), you can do this by increasing the `fs.inotify.max_user_watches` limit:
+
+   - **Linux:**
+
+     ```bash
+     sudo sysctl fs.inotify.max_user_watches=524288
+     sudo sysctl -p
+     ```
+
+   - **macOS:**
+
+     On macOS, you can increase the file descriptor limit by modifying the `launchctl` configuration:
+
+     ```bash
+     sudo launchctl limit maxfiles 65536 200000
+     ```
+
+   Restart your development environment after making these changes to apply them.
+
+3. **Check for Excessive Watchers**
+
+   Ensure that your development tools and processes are not creating excessive watchers. Review your project configuration and dependencies to optimize file watching.
+
+4. **Restart Your Development Environment**
+
+   Sometimes, simply restarting your development environment or machine can resolve temporary issues with file watchers.
+
+---
+\\
 ## Note
 
 This framework is a work-in-progress and not yet complete. It aims to mimic some of React's functionality using pure JavaScript. Some features may be incomplete or not fully tested. Use it for educational purposes or for experimentation.

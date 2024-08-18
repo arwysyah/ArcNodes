@@ -17,17 +17,8 @@ export default class App extends ArcComponent {
       message: `You've clicked ${this.mutableState.count + 1} time(s)!`,
     });
   }
-  initialize() {
-    console.log("Component initialized");
-  }
 
-  onDidUpdate(prevProps, prevState) {
-    console.log("Component updated", prevProps, prevState);
-  }
 
-  onDestroy() {
-    console.log("Component destroyed");
-  }
 
   render() {
     const Main = new MainContainerComponent();
