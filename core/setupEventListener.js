@@ -15,10 +15,19 @@ export function setupEventListeners(container, instance) {
     const handler = window[functionId];
 
     if (handler && typeof handler === "function") {
+      if (functionId === "" || functionId === "anonymous") {
+        throw new Error(
+          "Do not use anonymous functions. Instead, bind your function in the constructor."
+        );
+      }
+
       // Bind the handler to the instance and attach it to the click event
       element.addEventListener("click", handler.bind(instance));
     } else {
-      console.warn(`No function found for onclick attribute: ${functionId}`, handler);
+      console.warn(
+        `No function found for onclick attribute: ${functionId}`,
+        handler
+      );
     }
   });
 }
