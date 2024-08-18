@@ -1,5 +1,5 @@
 import { html, ArcComponent } from "../../src";
-import marked from "marked";
+
 import "./css/styles.css";
 
 class Documentation extends ArcComponent {

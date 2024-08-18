@@ -23,28 +23,38 @@ const items = [
 class HeaderComponent extends ArcComponent {
   constructor() {
     super();
-    console.log("HeaderComponent constructed");
+
     this.mutableState = {
       focus: 0,
       item: items,
     };
     // this.handleFocus = this.handleFocus.bind(this);
   }
+  handleFocus = (params) => {
+    this.applyChanges({ focus: params });
+     if(params == items.length-1){
+       window.open("https://github.com/arwysyah/ArcNodes", '_blank', 'noopener,noreferrer');
+     }
+
+     const targetElement = document.getElementById(items[params]["route"]);
+
+     if (targetElement) {
+       targetElement.scrollIntoView({ behavior: "smooth" });
+     }
+     if(items[params]["content"]== "Game"){
+
+       router.navigate(items[params]["route"])
+     }
+  };
 
   render() {
-    const ha = (index) => {
-      console.log("handleFocus called with index:", index);
-      if (this.mutableState.focus !== index) {
-        console.log("Changing focus state");
-        this.applyChanges({ focus: index });
-      }
-    };
     const list = this.mutableState.item
       .map((el, index) => {
-        console.log("Rendering item:", el, "at index:", index);
+        const functionId = `function_${index}`;
+        window[functionId] = this.handleFocus.bind(this, index);
 
         return html`<p
-          onclick=${() => ha(index)}
+          onclick=${functionId}
           class=${this.mutableState.focus == index ? "downloads" : "inaction"}
         >
           ${el.content}

@@ -29,7 +29,7 @@ export function renderComponentByName(name, container) {
   const instance = new Component();
 
   // Render the component's HTML and set it in the container
-  container.innerHTML = instance.renderComponent();
+  container.innerHTML = instance.render();
 
   // Set up event listeners for the component
   setupEventListeners(container, instance);
