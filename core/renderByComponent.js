@@ -22,15 +22,13 @@ export function renderComponentByName(name, container) {
 
   // Check if the component was found
   if (!Component) {
-    throw Error(`Component ${name} not found`);
-    return;
+    throw new Error(`Component ${name} not found`);
   }
 
   // Create an instance of the component
   const instance = new Component();
 
-  // Render the component's HTML into the container
-  container.innerHTML = instance.render();
+  // Render the component's HTML and set it in the container
   container.innerHTML = instance.renderComponent();
 
   // Set up event listeners for the component

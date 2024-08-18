@@ -61,6 +61,7 @@ Welcome to the Arc Component System! This guide will help you understand how to 
 
 - [Introduction](#introduction)
 - [Basic Usage](#basic-usage)
+- [Breaking Changes](#breaking-changes)
 - [Unique Component Keys (deprecated)](#unique-component-keys-deprecated)
 - [Nested Components](#nested-components)
 - [Passing Props](#passing-props)
@@ -87,9 +88,7 @@ import { ArcComponent, html } from "arc-nodes";
 export default class MyComponent extends ArcComponent {
   constructor(props) {
     super(props);
-    this.mutableState = {
-
-    };
+    this.mutableState = {};
   }
 
   render() {
@@ -107,9 +106,161 @@ MyComponent.registerComponent("MyComponent");
 
 ---
 
+Here's a draft for the README to highlight the breaking changes and guide users through the transition:
 
+---
 
-Here’s the revised README section with a note indicating that `componentKey` is now automatically injected:
+# ArcNodes Framework: Breaking Changes and Migration Guide
+
+## Breaking Changes
+
+### 1. From Tag-Based to Instance-Based Component Creation
+
+**Previous Approach:**
+
+In earlier versions of ArcNodes, components were instantiated and rendered using HTML-like tags directly in the `render()` method. For example:
+
+```html
+<my-component></my-component>
+```
+
+**New Approach:**
+
+In the current version, components are instantiated as JavaScript classes and then used within the `render()` method. This change improves flexibility and control over component creation and lifecycle management.
+
+**Migration Steps:**
+
+1. **Update Component Instantiation:**
+
+   Instead of using tags, instantiate components as JavaScript classes. For example, if you previously used:
+
+   ```html
+   <my-component></my-component>
+   ```
+
+   You should now create an instance of the component class:
+
+   ```js
+   const MyComponent = new MyComponentClass();
+   ```
+
+2. **Update Component Usage:**
+
+   Replace the old tag-based component rendering with the new instance-based approach. For instance, the following example demonstrates how to use the `App` component:
+
+   **Old Code:**
+
+   ```html
+   <app></app>
+   ```
+
+   **New Code:**
+
+   ```js
+   const appComponent = new App();
+   html`<div>${appComponent.run()}</div>`;
+   ```
+
+   Here's how to render the `App` component with the new approach:
+
+   ```js
+   import { App } from "arc-nodes";
+   import Test from "./test"; // Ensure the path is correct
+
+   export default class App extends ArcComponent {
+     constructor(props) {
+       super(props);
+       this.mutableState = {
+         count: 0,
+         message: "Welcome to ArcNodes!",
+       };
+       this.handleClick = this.handleClick.bind(this);
+     }
+
+     handleClick() {
+       this.applyChanges((prev) => ({
+         count: prev.count + 1,
+         message: `You've clicked ${prev.count + 1} time(s)!`,
+       }));
+       console.log(this.mutableState.count);
+     }
+
+     render() {
+       const Tests = new Test({ click: this.handleClick });
+
+       return html`
+         <div class="app-container">
+           <h1>${this.mutableState.message}</h1>
+           <div id="test-container">${Tests.run()};</div>
+           <button onclick=${this.handleClick}>Click Me</button>
+           <p>You've clicked ${this.mutableState.count} time(s)!</p>
+         </div>
+       `;
+     }
+   }
+
+   App.registerComponent("app");
+   ```
+
+Certainly! Here's a section you can include in the README to emphasize the advantages of the new approach, particularly regarding the ability to pass functions with state or callbacks between components:
+
+---
+
+3. **Enhanced Prop Handling with Functions**
+
+The new approach allows for more sophisticated prop handling, particularly when it comes to passing functions between components. This change brings several benefits:
+
+- **Stateful Callbacks**: You can now pass functions that maintain internal state or manage complex interactions. For example, a child component can receive a callback function from its parent, which might rely on the parent's internal state. This allows for more dynamic and interactive components.
+
+  ```javascript
+  // Parent Component
+  handleClick() {
+    this.applyChanges((prev) => ({
+      count: prev.count + 1,
+      message: `You've clicked ${prev.count + 1} time(s)!`,
+    }));
+  }
+
+  render() {
+    const childComponent = new ChildComponent({
+      onClick: this.handleClick,
+    });
+    return html`
+      <div>
+        ${childComponent.run()}
+      </div>
+    `;
+  }
+  ```
+
+- **Direct Callback Invocation**: Child components can invoke parent callbacks directly, ensuring that state updates or actions are handled seamlessly. This creates a more natural and intuitive flow of data and actions between parent and child components.
+
+  ```javascript
+  // Child Component
+  handleClick() {
+    this.props.onClick(); // Invoke parent's callback
+  }
+
+  render() {
+    return html`
+      <button onclick=${this.handleClick}>Click Me</button>
+    `;
+  }
+  ```
+
+#### 2. **Improved Component Instantiation**
+
+Switching to component instantiation provides several operational benefits:
+
+- **Explicit Component Control**: Instantiating components directly provides explicit control over component lifecycle and interaction. This makes it easier to manage and debug complex component trees.
+
+- **Flexibility in Component Management**: The ability to create and manage component instances programmatically offers greater flexibility in component configuration and integration, allowing for more dynamic and customizable UIs.
+
+- **Enhanced Readability and Maintainability**: By following the object-oriented approach of component instantiation, the code becomes more readable and maintainable. Each component's behavior and interactions are encapsulated within its class, promoting better organization and clarity.
+
+## Summary
+
+The new version of ArcNodes introduces a more flexible and controlled way of managing components. By switching from tag-based to instance-based component creation, you gain greater control over component lifecycle and state management and props. Ensure that all components are instantiated correctly and that names are unique to avoid conflicts.
 
 ---
 
@@ -119,12 +270,9 @@ Here’s the revised README section with a note indicating that `componentKey` i
 
 **Note:** As of the latest update, the `componentKey` is automatically injected based on the component name. You no longer need to manually specify `componentKey` in your component templates.
 
-
 ---
 
-
 ## Nested Components
-
 
 ### Defining Nested Components
 
@@ -146,7 +294,7 @@ export default class ParentComponent extends ArcComponent {
   }
 }
 
-OR 
+OR
 
 import { ArcComponent, html } from "arc-nodes";
 import "./MyChildComponent.js";    // Import child component
@@ -198,12 +346,13 @@ export default class ParentComponent extends ArcComponent {
   render() {
     const countProps = this.mutableState.count;
     const itemsProps = this.mutableState.items;
+      const Children = new ChildComponent({count:countProps,item:itemsProps})
 
     return html`
       <div>
         <h1>Parent Component</h1>
-        <button data-action="handleClick">Increase Count</button>
-        <ChildComponent count="${countProps}" items="${itemsProps}"/>
+        <button onclick=${this.handleClick}>Increase Count</button>
+      ${Children.run()}
 
       </div>
     `;
@@ -223,94 +372,22 @@ export default class ParentComponent extends ArcComponent {
 }
 
 // Register the component
-ParentComponent.registerComponent("ParentComponent"); 
+ParentComponent.registerComponent("ParentComponent");
 ```
 
 ### Using Props
 
 When using the component, pass props as attributes:
 
-```html
-<MyComponent message="Hello, World!" count="5"></MyComponent>
-or 
-<MyComponent message="Hello, World!" count="5"/>
-```
-## Function
-
-#### Overview
-
-The `data-action` and `action-params` attributes are powerful tools used in HTML to dynamically trigger JavaScript functions and pass parameters to them based on user interactions, such as clicks. These attributes are particularly useful in scenarios where you want to bind specific functions to elements and control the behavior of those functions through easily customizable parameters.
-
-#### `data-action`
-
-- **Purpose**: 
-  - The `data-action` attribute is used to specify the name of a JavaScript function that should be executed when a user interacts with an HTML element, typically through a click event.
-  
-- **Usage Example**:
-  ```html
-  <p data-action="handleFocus">Click Me</p>
-  ```
-  - In this example, when the `<p>` element is clicked, the function `handleFocus` will be invoked.
-
-#### `action-params`
-
-- **Purpose**:
-  - The `action-params` attribute is used in conjunction with `data-action` to pass specific parameters to the function being called.
-  - The value of `action-params` is usually a string that represents the parameter(s) that should be passed to the function.
-  
-- **Usage Example**:
-  ```html
-  <p data-action="handleFocus" action-params="2">Click Me</p>
-  ```
-  - In this example, when the `<p>` element is clicked, the `handleFocus` function is called with `2` as its argument.
-
-#### How It Works
-
-1. **Event Binding**:
-   - The `data-action` attribute identifies which function to call when the element is clicked.
-   - JavaScript code (often through a helper function like `setupEventListeners`) detects the `data-action` attribute and binds the specified function to the element's click event.
-
-2. **Passing Parameters**:
-   - When the element is clicked, the value specified in the `action-params` attribute is passed as an argument to the function.
-   - This allows the function to perform its tasks using the provided parameters.
-
-#### Practical Example
-
-Suppose you have a function called `handleFocus` in your JavaScript code, and you want it to perform different actions based on which navigation item is clicked:
-
-```html
-<!-- Navigation Items -->
-<p data-action="handleFocus" action-params="0">Home</p>
-<p data-action="handleFocus" action-params="1">Documentation</p>
-<p data-action="handleFocus" action-params="2">Game</p>
-<p data-action="handleFocus" action-params="3">Source</p>
-```
-
-In your JavaScript file:
-
 ```javascript
-function handleFocus(params) {
-  console.log(`Item ${params} was clicked`);
-  // Additional logic based on params
-}
+const MyComponent = new Component({ name: "Arwy" });
+return html`${MyComponent.run()}`;
 ```
-
-- Clicking on "Home" calls `handleFocus(0)`.
-- Clicking on "Documentation" calls `handleFocus(1)`.
-- Clicking on "Game" calls `handleFocus(2)`.
-- Clicking on "Source" calls `handleFocus(3)`.
-
-This setup makes your code modular and easy to maintain, as you can control the behavior of your functions directly from the HTML structure.
-
-#### Summary
-
-- **`data-action`**: Specifies the function to be triggered on user interaction.
-- **`action-params`**: Passes parameters to the triggered function, allowing for dynamic and context-sensitive function execution.
-- Together, they provide a flexible and powerful way to manage event-driven functionality in your web application.
 
 ### Styling
 
-When using the component, styling can be used  such as:
+When using the component, styling can be used such as:
+
 - Inline styles are useful for applying styles directly within the component. This is ideal for simple, component-specific styling.
 - You can define styles within the component using the <style> tag. These styles will be scoped to the component and will not affect other components.
 
@@ -344,8 +421,7 @@ class ChildComponent extends ArcComponent {
   }
 
   render() {
-    return html`
-<style>
+    return html` <style>
         .styled-text {
           color: blue;
           font-size: 18px;
@@ -358,10 +434,10 @@ class ChildComponent extends ArcComponent {
         <div style="color: red; font-size: 20px;">
           This is a styled component with inline styles.
         </div>
-        <button data-action="handleClick1">
+        <button onclick=${this.handleClick1}>
           clicked ${this.mutableState.counter1}
         </button>
-        <button data-action="handleClick2">click2</button>
+        <button onclick=${this.handleClick2}>click2</button>
 
         <p class="styled-text">${this.mutableState.counter1}</p>
         <p>${this.mutableState.counter2}</p>
@@ -369,7 +445,6 @@ class ChildComponent extends ArcComponent {
   }
 }
 ChildComponent.registerComponent("ChildComponent");
-
 ```
 
 ---
@@ -399,19 +474,17 @@ To use CSS files with `ArcNodes`, follow these steps:
    In your ArcNodes component file, import the CSS file at the top of your file. For example:
 
    ```javascript
-   import './styles.css';
-   
+   import "./styles.css";
+
    class MyComponent extends ArcComponent {
      render() {
        return html`
-         <div class="app-container">
-           Hello, this is my styled component!
-         </div>
+         <div class="app-container">Hello, this is my styled component!</div>
        `;
      }
    }
-   
-   MyComponent.registerComponent("MyComponent")
+
+   MyComponent.registerComponent("MyComponent");
    ```
 
 3. **Use Your Component:**
@@ -423,8 +496,6 @@ To use CSS files with `ArcNodes`, follow these steps:
 - **Modularity:** Keep your styles organized and maintainable by separating them into individual CSS files.
 - **Scoped Styles:** Apply styles specific to components without affecting other parts of your application.
 - **Ease of Use:** Directly import CSS files in your component files for quick styling changes.
-
-
 
 ---
 
@@ -444,7 +515,6 @@ Lifecycle methods in Arc Component System are used to hook into various stages o
 import { ArcComponent, html } from "arc-nodes";
 
 export default class MyComponent extends ArcComponent {
-
   initialize() {
     console.log("Component initialized");
   }
@@ -470,8 +540,6 @@ export default class MyComponent extends ArcComponent {
 MyComponent.registerComponent("MyComponent"); // written as  <MyComponent/ > or <MyComponent></MyComponent> later
 ```
 
-
-
 ## Example
 
 Here's a complete example demonstrating the usage of a parent component with nested child components, passing props, and utilizing lifecycle methods.
@@ -480,25 +548,25 @@ Here's a complete example demonstrating the usage of a parent component with nes
 
 ```javascript
 import { ArcComponent, html } from "arc-nodes";
-import "./ChildComponent.js";
+import ChildComponent from "./ChildComponent";
 
 export default class ParentComponent extends ArcComponent {
   constructor(props) {
     super(props);
     this.mutableState = { count: 0 };
-   
   }
 
-  handleClick() {
+  handleClick = () => {
     this.applyChanges({ count: this.mutableState.count + 1 });
-  }
+  };
 
   render() {
+    const Children = new ChildComponent({ count: this.mutableState.count });
     return html`
       <div>
         <h1>Parent Component</h1>
-        <button data-action="handleClick">Increase Count</button>
-        <child-component count="${this.mutableState.count}"></child-component>
+        <button onclick=${this.handleClick}>Increase Count</button>
+        ${Children.run()}
       </div>
     `;
   }
@@ -548,39 +616,41 @@ export default class ChildComponent extends ArcComponent {
 }
 
 // Register the component
-ChildComponent.registerComponent("child-component");
+ChildComponent.registerComponent("ChildComponent");
 ```
-
 
 ---
 
-### Flatlist Component 
+### Flatlist Component
 
 #### Overview
+
 The `Flatlist` component is a utility function designed to render a list of items as HTML. It allows for customization through class names, inline styles, and a unique key for the component. The component accepts an array of data and a function to render each item in the list.
 
 #### Parameters
 
-- **data** (`Array`): 
+- **data** (`Array`):
+
   - An array of data items to be rendered.
   - Default value: `[]`.
   - Each item in the array is passed to the `renderItem` function for rendering.
 
-- **renderItem** (`Function`): 
+- **renderItem** (`Function`):
+
   - A function responsible for rendering each item in the list.
   - This function receives an object with a single key `item`, representing the current data item, and the index of the item as arguments.
   - Returns an HTML string for each item.
 
-- **options** (`Object`): 
+- **options** (`Object`):
   - An optional configuration object for customizing the list rendering.
   - Default value: `{}`.
-  - **options.className** (`string`): 
+  - **options.className** (`string`):
     - A string to be used as the `class` attribute of the container `<div>`.
     - Default value: `""`.
-  - **options.style** (`Object`): 
+  - **options.style** (`Object`):
     - An object representing inline CSS styles for the container `<div>`.
     - Default value: `{}`.
-  - **options.componentKey** (`string`): 
+  - **options.componentKey** (`string`):
     - A unique identifier for the component, which is set as a `data-key` attribute on the container `<div>`.
     - Default value: `"Flatlist"`.
 
@@ -593,7 +663,6 @@ The `Flatlist` component is a utility function designed to render a list of item
 Here’s an example of how to use the `Flatlist` component:
 
 ```javascript
-
 const items = [
   {
     content: "Home",
@@ -618,11 +687,9 @@ class HeaderComponent extends ArcComponent {
       focus: 0,
       item: items,
     };
-
   }
   handleFocus(params) {
     this.applyChanges({ focus: params });
-   
   }
 
   render() {
@@ -633,9 +700,7 @@ class HeaderComponent extends ArcComponent {
       data: this.mutableState.item,
       renderItem: ({ item }, index) =>
         html`<p
-          data-action="handleFocus"
           class=${this.mutableState.focus == index ? "downloads" : "inaction"}
-          action-params=${index}
         >
           ${item.content}
         </p> `,
@@ -644,7 +709,6 @@ class HeaderComponent extends ArcComponent {
     return html`
       <header class="header">
         <div class="container" id="header">
-      
           <div class="logo">
             <img src="../public/logo.png" alt="Giant Logo" />
           </div>
@@ -671,11 +735,10 @@ export default HeaderComponent;
 - **options**: Configures the container's class, style, and component key. The list will be wrapped in a `<div>` with these attributes.
 - **listHTML**: The resulting HTML string from the `Flatlist` function, ready to be inserted into the DOM.
 
-
 # ListContainer (List rendering)
 
 ```javascript
-import { ListContainer } from 'arc-nodes';
+import { ListContainer } from "arc-nodes";
 ```
 
 ## API
@@ -702,12 +765,12 @@ Display a container element with a list of items.
 ### Basic Usage
 
 ```javascript
-import { ListContainer } from 'arc-nodes';
+import { ListContainer } from "arc-nodes";
 
 // Create a container with basic items
-const items = ['Item 1', 'Item 2', 'Item 3'];
+const items = ["Item 1", "Item 2", "Item 3"];
 const container = ListContainer(items, {
-  className: 'my-list-container',
+  className: "my-list-container",
 });
 document.body.appendChild(container);
 ```
@@ -717,8 +780,8 @@ document.body.appendChild(container);
 Here’s how to use `ListContainer` in an `ArcComponent`:
 
 ```javascript
-import { ArcComponent, html, ListContainer } from 'arc-nodes';
-import './css/child.css';
+import { ArcComponent, html, ListContainer } from "arc-nodes";
+import "./css/child.css";
 
 export default class Child extends ArcComponent {
   constructor(props) {
@@ -734,16 +797,16 @@ export default class Child extends ArcComponent {
   }
 
   customItemRenderer(item) {
-    const element = document.createElement('div');
+    const element = document.createElement("div");
     element.textContent = item.content || item;
-    element.style.color = item.color || 'black';
+    element.style.color = item.color || "black";
     return element;
   }
 
   render() {
     // Create a list container with dynamic items
     const listContainer = ListContainer(this.props.items || [], {
-      className: this.props.containerClass || 'list-container',
+      className: this.props.containerClass || "list-container",
       attributes: this.props.containerAttributes || {},
       style: this.props.containerStyle || {},
       itemRenderer: this.customItemRenderer, // Pass custom renderer
@@ -752,11 +815,11 @@ export default class Child extends ArcComponent {
     return html`
       <div class="child-container">
         <h1 class="child-title">Child Component</h1>
-        <p class="child-counter">
-          Counter: ${this.mutableState.count}
-        </p>
+        <p class="child-counter">Counter: ${this.mutableState.count}</p>
         ${listContainer}
-        <button class="child-button" data-action="handleIncrement">Increment</button>
+        <button class="child-button" onclick=${this.handleIncrement}>
+          Increment
+        </button>
       </div>
     `;
   }
@@ -768,25 +831,25 @@ export default class Child extends ArcComponent {
 #### Using a Custom Renderer
 
 ```javascript
-import { ListContainer } from 'arc-nodes';
+import { ListContainer } from "arc-nodes";
 
 // Custom renderer function
 function customItemRenderer(item) {
-  const element = document.createElement('div');
+  const element = document.createElement("div");
   element.textContent = item.content || item;
-  element.style.color = item.color || 'black';
+  element.style.color = item.color || "black";
   return element;
 }
 
 // Create a container with custom item rendering
 const items = [
-  { content: 'Item 1', color: 'red' },
-  { content: 'Item 2', color: 'blue' },
-  'Item 3', // Fallback for default rendering
+  { content: "Item 1", color: "red" },
+  { content: "Item 2", color: "blue" },
+  "Item 3", // Fallback for default rendering
 ];
 const container = ListContainer(items, {
-  className: 'my-custom-list-container',
-  style: { padding: '10px' },
+  className: "my-custom-list-container",
+  style: { padding: "10px" },
   itemRenderer: customItemRenderer,
 });
 document.body.appendChild(container);
@@ -795,16 +858,19 @@ document.body.appendChild(container);
 #### Applying Inline Styles and Attributes
 
 ```javascript
-import { ListContainer } from 'arc-nodes';
+import { ListContainer } from "arc-nodes";
 
 // Create a container with custom styles and attributes
-const items = ['Item 1', 'Item 2', 'Item 3'];
+const items = ["Item 1", "Item 2", "Item 3"];
 const container = ListContainer(items, {
-  className: 'styled-list-container',
-  attributes: { 'data-role': 'list' },
-  style: { border: '1px solid black', padding: '5px' },
+  className: "styled-list-container",
+  attributes: { "data-role": "list" },
+  style: { border: "1px solid black", padding: "5px" },
 });
-html`<div>${container}<div>`
+html`<div>
+  ${container}
+  <div></div>
+</div>`;
 ```
 
 ## Notes
@@ -819,6 +885,7 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 ---
 
 ## Routing System Usage
+
 ### Router
 
 The `Router` class in your framework enables easy route management and navigation between different components in your application. Below is a step-by-step guide on how to set up and use the router.
@@ -828,10 +895,10 @@ The `Router` class in your framework enables easy route management and navigatio
 Start by importing the router from your framework. You'll also import the components you want to associate with specific routes.
 
 ```javascript
-index.js
-import { router } from './router';
-import HomeComponent from './components/HomeComponent';
-import AboutComponent from './components/AboutComponent';
+index.js;
+import { router } from "./router";
+import HomeComponent from "./components/HomeComponent";
+import AboutComponent from "./components/AboutComponent";
 ```
 
 ### 2. Define Routes
@@ -840,8 +907,8 @@ Use the `addRoute` method to map specific paths to components. Each route should
 
 ```javascript
 // Define your routes
-router.addRoute('/home', HomeComponent);
-router.addRoute('/about', AboutComponent);
+router.addRoute("/home", HomeComponent);
+router.addRoute("/about", AboutComponent);
 ```
 
 ### 3. Set the Initial Route
@@ -850,7 +917,7 @@ To define the route that should be displayed when the application first loads, u
 
 ```javascript
 // Set the initial route
-router.setInitialRoute('/home', HomeComponent);
+router.setInitialRoute("/home", HomeComponent);
 ```
 
 ### 4. Start the Router
@@ -867,7 +934,7 @@ You can navigate to different routes programmatically using the `navigate` metho
 
 ```javascript
 // Navigate to a route programmatically
-router.navigate('/about');
+router.navigate("/about");
 ```
 
 ### Example
@@ -875,22 +942,22 @@ router.navigate('/about');
 Here’s how everything comes together in your `index.js`:
 
 ```javascript
-import { router } from './router';
-import HomeComponent from './components/HomeComponent';
-import AboutComponent from './components/AboutComponent';
+import { router } from "./router";
+import HomeComponent from "./components/HomeComponent";
+import AboutComponent from "./components/AboutComponent";
 
 // Define your routes
-router.addRoute('/home', HomeComponent);
-router.addRoute('/about', AboutComponent);
+router.addRoute("/home", HomeComponent);
+router.addRoute("/about", AboutComponent);
 
 // Set the initial route
-router.setInitialRoute('/home', HomeComponent);
+router.setInitialRoute("/home", HomeComponent);
 
 // Start the router
 router.onStart();
 
 // Navigate to a route programmatically
-router.navigate('/about');
+router.navigate("/about");
 ```
 
 ### Summary
@@ -899,9 +966,6 @@ router.navigate('/about');
 - **`setInitialRoute(path, component)`**: Sets the initial route to be displayed when the application loads.
 - **`onStart()`**: Initializes the router and renders the initial component.
 - **`navigate(path)`**: Programmatically navigates to a specified route.
-
-
-
 
 ---
 
@@ -932,6 +996,3 @@ To run this project, you'll need:
 ## Note
 
 This framework is a work-in-progress and not yet complete. It aims to mimic some of React's functionality using pure JavaScript. Some features may be incomplete or not fully tested. Use it for educational purposes or for experimentation.
-
-
-
