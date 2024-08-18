@@ -1,27 +1,25 @@
-import { mountNestedComponents } from "./mountNestedComponent";
-import { setupEventListeners } from "./setupEventListener";
 import { injectComponentKey } from "./utils/componentKeyInjector";
+import { setupEventListeners } from "./setupEventListener";
+import { mountNestedComponents } from "./mountNestedComponent";
 import { isEncoded } from "./utils/encoderChecker";
 import { convertStringToFunction } from "./utils/functionConverter";
 
-const components = {}; // Global registry for components
-
 /**
- * Base class for creating components in the Arc framework.
- * Provides lifecycle methods, state management, and rendering capabilities.
+ * Base class for Arc components.
+ * This class provides the foundation for creating components with lifecycle methods,
+ * state management, and rendering capabilities.
  */
-
 export default class ArcComponent {
   /**
+   * The name of the component. This is set automatically based on the class name.
    * @static
    * @type {string}
-   * @description The name of the component. Set by the `registerComponent` method.
    */
   static componentName;
 
   /**
-   * Creates an instance of ArcComponent.
-   * @param {object} [props={}] - Initial properties for the component.
+   * Initializes a new instance of the ArcComponent class.
+   * @param {object} props - The initial properties for the component.
    */
   constructor(props) {
     this.props = this.parseProps(props || {});
@@ -34,77 +32,45 @@ export default class ArcComponent {
   }
 
   /**
-   * Parses and processes the properties (props) for the component.
-   * This method converts JSON-encoded strings into their respective data types
-   * and handles any values that fail to parse as JSON.
-   *
-   * @param {Object} props - An object containing properties as key-value pairs,
-   * where values may be JSON-encoded strings.
-   *
-   * @returns {Object} An object with properties where JSON-encoded strings
-   * are parsed back into their original data types, and other values are used as-is.
-   *
-   *  /** */
+   * Runs the component, initializing it if necessary and rendering its HTML.
+   * @returns {string} The rendered HTML of the component.
+   */
+  run() {
+    this.initialize();
+    this.renderedHtml = this.renderComponent();
+    let container = this.getContainer();
 
-  parseProps(props) {
-    const parsedProps = {};
-
-    for (const [key, value] of Object.entries(props)) {
-      const isEncodeElement = isEncoded(value);
-      if (isEncodeElement) {
-        const decoded = decodeURIComponent(value);
-        try {
-          parsedProps[key] = JSON.parse(decoded);
-        } catch (error) {
-          if (decoded.includes("function")) {
-            if (decoded.includes("native code")) {
-              throw new Error("You can not pass function that already binded");
-            } else {
-              parsedProps[key] = convertStringToFunction(decoded.toString());
-            }
-          } else {
-            parsedProps[key] = decoded;
-          }
-        }
-      } else {
-        try {
-          parsedProps[key] = JSON.parse(value);
-        } catch (e) {
-          parsedProps[key] = value;
-        }
-      }
+    if (!container) {
+      container = document.createElement("div");
+      container.setAttribute("componentKey", this.constructor.componentName);
     }
-    return parsedProps;
+
+    container.innerHTML = this.renderedHtml;
+
+    this.reRender();
+    return container.innerHTML;
   }
 
   /**
-   * Renders the component's content inside a container with a componentKey attribute.
-   * @returns {string} The HTML string representing the component.
+   * A static registry of component classes.
+   * @static
+   * @type {object}
    */
-  renderComponent() {
-    const content = this.render();
-    const componentKey =
-      this.constructor.componentName || this.constructor.name;
-    return injectComponentKey(content, componentKey);
-  }
-  // renderComponent() {
-  //   const content = this.render();
-  //   return `<div componentKey="${this.constructor.componentName}">${content}</div>`;
-  // }
+  static components = {};
 
   /**
    * Registers the component with a specified name in the global registry.
    * @static
    * @param {string} name - The name to register the component under.
-   * @throws {Error} Throws an error if the name is not defined.
+   * @throws {Error} Throws an error if the name is not defined or if a component with the same name is already registered.
    */
   static registerComponent(name) {
-    if (name) {
-      this.componentName = name; // Set the component name
-      components[name.toLowerCase()] = this;
-    } else {
-      throw Error("Component name is not defined");
+    const lowerCaseName = name.toLowerCase();
+    if (lowerCaseName in this.components) {
+      throw new Error(`Component with name "${name}" is already registered`);
     }
+    this.components[lowerCaseName] = this;
+    this.componentName = name; // Optional, if needed
   }
 
   /**
@@ -114,7 +80,30 @@ export default class ArcComponent {
    * @returns {ArcComponent|undefined} The component class or `undefined` if not found.
    */
   static getComponent(name) {
-    return components[name.toLowerCase()];
+    return this.components[name.toLowerCase()];
+  }
+
+  /**
+   * Parses the properties passed to the component.
+   * @param {object} props - The properties to parse.
+   * @returns {object} The parsed properties.
+   */
+  parseProps(props) {
+    const parsedProps = {};
+    for (const [key, value] of Object.entries(props)) {
+      parsedProps[key] = value; // Simplified for this context
+    }
+    return parsedProps;
+  }
+
+  /**
+   * Renders the component's HTML, injecting a unique component key.
+   * @returns {string} The rendered HTML with component key.
+   */
+  renderComponent() {
+    const content = this.render();
+    const componentKey = this.constructor.componentName || this.constructor.name;
+    return injectComponentKey(content, componentKey);
   }
 
   /**
@@ -210,7 +199,7 @@ export default class ArcComponent {
    * Can be overridden to perform cleanup tasks.
    */
   beforeUnmount() {
-    this.onCleanup();
+    this.onDestroy();
   }
 
   /**

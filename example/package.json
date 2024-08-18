@@ -1,9 +1,6 @@
 {
   "name": "my-example-arc",
   "version": "0.0.1",
-  "dependencies": {
-     "marked": "^14.0.0"
-  },
   "scripts": {
     "build": "webpack --mode=development --node-env=production",
     "start": "webpack-dev-server --mode development --open",

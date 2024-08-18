@@ -21,12 +21,6 @@ export function mountNestedComponents(container) {
     if (Component) {
       // Collect properties from element attributes
       const props = {};
-      Array.from(el.attributes).forEach(({ name, value }) => {
-        if (name !== "data-action") {
-          // Exclude action attributes
-          props[name] = value;
-        }
-      });
 
       // Create an instance of the component and render it
       const instance = new Component(props);

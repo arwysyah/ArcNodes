@@ -6,19 +6,23 @@ import FeatureComponent from "./feature";
 import "./css/styles.css";
 import Documentation from "./documentation";
 
+
 export default class MainContainerComponent extends ArcComponent {
   render() {
-    const title = "Title";
+  
+    const Header = new HeaderComponent()
+    const Hero= new HeroComponent()
+    const Docs= new Documentation()
     return html`
       <div componentKey="Main">
-        <header-component componentKey="header-component"></header-component>
-        <hero-component componentKey="Hero"></hero-component>
+       ${Header.run()}
+        ${Hero.run()}
+        ${Docs.run()}
         <section
           class="features-section"
           id="feat"
           componentKey="features-section"
         >
-          <Documentation componentKey="Documentation"></Documentation>
         </section>
       </div>
     `;

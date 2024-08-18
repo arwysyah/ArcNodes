@@ -1,4 +1,4 @@
-import { html,ArcComponent, Flatlist, router } from '../../src';
+import { html, ArcComponent, Flatlist, router } from "../../src";
 
 import "./css/styles.css";
 
@@ -19,58 +19,48 @@ const items = [
     content: "Source",
   },
 ];
+
 class HeaderComponent extends ArcComponent {
   constructor() {
     super();
+    console.log("HeaderComponent constructed");
     this.mutableState = {
       focus: 0,
       item: items,
     };
-    // this.customItemRenderer = this.customItemRenderer.bind(this);
-  }
-  handleFocus(params) {
-    this.applyChanges({ focus: params });
-    if(params == items.length-1){
-      window.open("https://github.com/arwysyah/ArcNodes", '_blank', 'noopener,noreferrer');
-    }
-
-    const targetElement = document.getElementById(items[params]["route"]);
-
-    if (targetElement) {
-      targetElement.scrollIntoView({ behavior: "smooth" });
-    }
-    if(items[params]["content"]== "Game"){
-
-      router.navigate(items[params]["route"])
-    }
+    // this.handleFocus = this.handleFocus.bind(this);
   }
 
   render() {
-    const listContainer = Flatlist({
-      options: {
-        className: "container",
-      },
-      data: this.mutableState.item,
-      renderItem: ({ item }, index) =>
-        html`<p
-          data-action="handleFocus"
+    const ha = (index) => {
+      console.log("handleFocus called with index:", index);
+      if (this.mutableState.focus !== index) {
+        console.log("Changing focus state");
+        this.applyChanges({ focus: index });
+      }
+    };
+    const list = this.mutableState.item
+      .map((el, index) => {
+        console.log("Rendering item:", el, "at index:", index);
+
+        return html`<p
+          onclick=${() => ha(index)}
           class=${this.mutableState.focus == index ? "downloads" : "inaction"}
-          action-params=${index}
         >
-          ${item.content}
-        </p> `,
-    });
+          ${el.content}
+        </p>`;
+      })
+      .join("");
 
     return html`
       <header class="header">
         <div class="container" id="header">
-      
           <div class="logo">
             <img src="../public/logo.png" alt="Arcnodes Logo" />
           </div>
           <nav>
             <ul>
-              ${listContainer}
+              ${list}
             </ul>
           </nav>
         </div>
@@ -78,7 +68,5 @@ class HeaderComponent extends ArcComponent {
     `;
   }
 }
-
-HeaderComponent.registerComponent("header-component");
-
+HeaderComponent.registerComponent("HeaderComponent");
 export default HeaderComponent;

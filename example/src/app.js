@@ -1,6 +1,4 @@
-
-
-import { ArcComponent,html } from "../../src";
+import { ArcComponent, html } from "../../src";
 import MainContainerComponent from "./main";
 
 export default class App extends ArcComponent {
@@ -24,7 +22,7 @@ export default class App extends ArcComponent {
   }
 
   onDidUpdate(prevProps, prevState) {
-    console.log("Component updated",prevProps,prevState);
+    console.log("Component updated", prevProps, prevState);
   }
 
   onDestroy() {
@@ -32,13 +30,8 @@ export default class App extends ArcComponent {
   }
 
   render() {
-    return html`
-    
-
-      <div class="app-container">
-       <Main componentKey="ComponentMain"></Main>
-      </div>
-    `;
+    const Main = new MainContainerComponent();
+    return html` <div class="app-container">${Main.run()}</div> `;
   }
 }
 
