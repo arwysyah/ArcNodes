@@ -1,11 +1,12 @@
-import ArcComponent from "../Arc";
-import { renderComponentByName } from "../renderByComponent";
+import ArcComponent from '../Arc';
+import { renderComponentByName } from '../renderByComponent';
+// Router Version 0.0.56
 class Router {
   constructor() {
     this.routes = {};
-    this.initialRoute = "";
-    window.addEventListener("hashchange", this.onStart.bind(this));
-    window.addEventListener("popstate", this.onStart.bind(this));
+    this.initialRoute = '';
+    window.addEventListener('hashchange', this.onStart.bind(this));
+    window.addEventListener('popstate', this.onStart.bind(this));
   }
 
   /**
@@ -21,22 +22,33 @@ class Router {
    * Handles route changes and renders the appropriate component.
    */
   onStart() {
-    const path = window.location.hash.slice(1) || "/";
-    
+    const noEndpoint = '/';
+    const path = window.location.hash.slice(1) || noEndpoint;
 
-    const slashRoute = path.includes("/") ? path:`/${path}`
+    if (path == noEndpoint) {
+      const listOfPath = Object.entries(this.routes).map(([key, val]) => {
+        const valueName = val.name;
+        return { key, value: valueName, component: val };
+      });
+      const initialPath = listOfPath.filter(
+        e => e.value == this.initialRoute
+      )[0];
+
+      this.navigate(initialPath.key, initialPath.component);
+      return;
+    }
+    const slashRoute = path.includes(noEndpoint) ? path : noEndpoint + path;
     if (!this.routes[slashRoute]) {
-  
-      throw Error("There is no route detected, are you missing something");
-  }
+      throw Error('There is no route detected, are you missing something');
+    }
     const currentRoute = this.routes[slashRoute];
     const currentPath = this.getFunctionName(currentRoute);
     const component = ArcComponent.getComponent(currentPath);
     if (!this.initialRoute) {
-      throw Error("ERROR : initialRoute not yet set");
+      throw Error('ERROR : initialRoute not yet set');
     }
     if (component) {
-      const root = document.getElementById("root");
+      const root = document.getElementById('root');
       if (root) {
         const instance = new component();
         root.innerHTML = instance.renderComponent();
@@ -44,7 +56,7 @@ class Router {
         renderComponentByName(currentPath, root);
       }
     } else {
-      if (path == "/" || this.initialRoute) {
+      if (path == noEndpoint || this.initialRoute) {
         renderComponentByName(this.initialRoute, root);
       }
     }
