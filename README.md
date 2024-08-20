@@ -61,6 +61,7 @@ Welcome to the Arc Component System! This guide will help you understand how to 
 - [Introduction](#introduction)
 - [Basic Usage](#basic-usage)
 - [Breaking Changes](#breaking-changes)
+- [Function Binding with params](#function-binding-with-parameters)
 - [Unique Component Keys (deprecated)](#unique-component-keys-deprecated)
 - [Nested Components](#nested-components)
 - [Passing Props](#passing-props)
@@ -262,7 +263,74 @@ The new version of ArcNodes introduces a more flexible and controlled way of man
 
 
 ---
+---
 
+### Function Binding with Parameters
+
+In your framework, you can bind functions to HTML elements and pass parameters to them using the `action-arg` attribute. This allows you to dynamically pass data to your event handlers directly from your HTML templates.
+
+#### Example Usage
+
+Consider the following example where you want to bind a click event to a function and pass an object as a parameter:
+
+```javascript
+class TestComponent extends ArcComponent {
+  constructor() {
+    super();
+    this.handleTestClick = this.handleTestClick.bind(this);
+  }
+
+  handleTestClick(params) {
+    // Access the passed parameter
+    console.log('Click From Test', params);
+
+    // Perform additional actions
+    this.props.passProps(params);
+  }
+
+  render() {
+    return html`
+      <div>
+        Hello World
+        <div
+          style="height:100px; color:blue;"
+          onclick=${this.handleTestClick}
+          action-arg=${JSON.stringify({ Data: 'B' })}
+        ></div>
+      </div>
+    `;
+  }
+}
+```
+
+#### How It Works
+
+1. **Function Binding**: The function `handleTestClick` is bound to the `onclick` event of the `<div>` element.
+
+2. **Passing Parameters**: The `action-arg` attribute is used to pass parameters to the function. The value is expected to be a JSON string, which will be parsed and passed to the function as a parameter.
+
+   ```html
+   <div onclick=${this.handleTestClick} action-arg=${JSON.stringify({ Data: 'B' })}></div>
+   ```
+
+   - If the `action-arg` is malformed or cannot be parsed, the function will still be bound to the event, but no parameters will be passed.
+  
+3. **Accessing Parameters**: Inside the `handleTestClick` function, you can access the parameters via the `params` argument. This allows you to perform actions based on the data passed.
+
+   ```javascript
+   handleTestClick(params) {
+     console.log('Click From Test', params); // Outputs: { Data: 'B' }
+     this.props.passProps(params); // Pass the params to another function or component
+   }
+   ```
+
+#### Important Notes
+
+- **Global Functions**: The function referenced in the `onclick` attribute must be globally accessible via the `window` object. This is automatically handled by the `html` template function, which registers functions globally.
+
+- **JSON Stringify**: Always use `JSON.stringify` to convert objects into strings for the `action-arg` attribute. This ensures that the data is correctly passed and parsed.
+
+---
 ## Unique Component Keys (Deprecated)
 
 **Note:** As of the latest update, the `componentKey` is automatically injected based on the component name if you declared componet with instance. You no longer need to manually specify `componentKey` in your component templates except with tag. This change simplifies component management and ensures that each instance of your component is uniquely identified without requiring additional configuration.
@@ -436,18 +504,19 @@ When mapping over arrays to create dynamic HTML elements with event handlers, it
 In your code, you can use the following pattern to bind event handlers when iterating over an array:
 
 ```javascript
+
+handleFocus(params){
+  console.log(params)
+}
 const list = this.mutableState.item
   .map((el, index) => {
-    // Create a unique function ID for each handler
-    const functionId = `function_${index}`;
-
-    // Bind the event handler function to the current index
-    window[functionId] = this.handleFocus.bind(this, index);
+   
+    const functionName = getFunctionName(this.handleFocus);
 
     return html`
       <p
         onclick=${functionId}  // Assign the function ID to the onclick event
-        action-params=${1}
+        action-arg=${index}
         class=${this.mutableState.focus == index ? "downloads" : "inaction"}
       >
         ${el.content}
@@ -1138,7 +1207,7 @@ To resolve this issue, you can try the following steps one by one :
    Sometimes, simply restarting your development environment or machine can resolve temporary issues with file watchers.
 
 ---
-\\
+
 ## Note
 
 This framework is a work-in-progress and not yet complete. It aims to mimic some of React's functionality using pure JavaScript. Some features may be incomplete or not fully tested. Use it for educational purposes or for experimentation.
