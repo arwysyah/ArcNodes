@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 const fs = require("fs");
 const path = require("path");
-const { execSync } = require("child_process");
 
 const projectName = process.argv[2] || "arcnode-project";
 const templatePath = path.resolve(__dirname, "../templates/default-template");
@@ -25,7 +24,6 @@ const reset = '\x1b[0m';
 
 console.log(`Created ${projectName} at ${targetPath}`);
 console.log(`${green}Installing dependencies...${reset}`);
-execSync(`cd ${projectName} && npm install`, { stdio: "inherit" });
 console.log(`${blue}\nProject setup complete!${reset}`);
 console.log(`${blue}Navigate to your project directory:${reset}`);
 console.log(`  cd ${projectName}`);

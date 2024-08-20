@@ -10,9 +10,10 @@ class Game extends ArcComponent {
       timer: 30,
       intervalId: null,
     };
+    this.handleButtonClick= this.handleButtonClick.bind(this)
   }
 
-  startGame = () => {
+  startGame () {
   
     if (this.mutableState.isPlaying) return;
 
@@ -35,7 +36,7 @@ class Game extends ArcComponent {
     this.applyChanges({ intervalId });
   };
 
-  stopGame = () => {
+  stopGame  () {
     if (!this.mutableState.isPlaying) return;
 
     clearInterval(this.mutableState.intervalId);
@@ -45,7 +46,8 @@ class Game extends ArcComponent {
     });
   };
 
-  handleButtonClick = () => {
+  handleButtonClick () {
+   
     if (this.mutableState.isPlaying) {
       this.applyChanges((prevState) => ({
         score: prevState.score + 1,
@@ -67,10 +69,10 @@ class Game extends ArcComponent {
               `
             : html`
                 <button
-                  button
+           
                   onclick=${this.stopGame}
                   class="game-button"
-                  class="stop-button"
+          
                 >
                   Stop Game
                 </button>
