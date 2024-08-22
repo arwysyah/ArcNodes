@@ -76,6 +76,9 @@ class Router {
    * @param {ArcComponent} component - The component to render for the initial route.
    */
   setInitialRoute(path, component) {
+    if (path == '/') {
+      path = '/home'; // at leat for now ~/
+    }
     const compName = this.getFunctionName(component);
 
     this.initialRoute = compName;

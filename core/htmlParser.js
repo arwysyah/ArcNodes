@@ -49,7 +49,9 @@ export function html(strings, ...values) {
   const processedValues = values.map(value => {
     if (typeof value === 'function') {
       const functionName = getFunctionName(value);
-
+    //   if (window[functionName]) {
+    //     throw new Error(`A ${functionName} function with this name already exists globally. Please use a different name.`);
+    // }
       window[functionName] = value;
       return functionName;
     }

@@ -2,6 +2,12 @@
 
 ArcNodes is an experimental minimalist and simplified UI Framework for creating web applications using pure JavaScript. It includes core concepts of components, state management and utilizing streamlined content rendering for a straightforward development experience.. This documentation provides an overview of how to use ArcNodes, including installation, basic usage, and advanced features.
 
+
+---
+
+**DISCLAIMER:** This framework is made and maintained by someone who has never been a web developer—just a programmer with limited experience, not yet at a senior level, who enjoys messing around with code for fun. As a result, you might find this framework frustrating, with numerous oddities and quirks—those are bugs, not features. If you encounter any issues and want to fix them, your contributions would be genuinely appreciated!
+
+---
 ## Features
 
 - Component-based architecture
@@ -1052,12 +1058,21 @@ Start by importing the router from your framework. You'll also import the compon
 
 ```javascript
 index.js;
-import { router } from "./router";
+import { router } from "arc-nodes";
 import HomeComponent from "./components/HomeComponent";
 import AboutComponent from "./components/AboutComponent";
 ```
 
-### 2. Define Routes
+### 2. Set the Initial Route
+
+To define the route that should be displayed when the application first loads, use the `setInitialRoute` method. This method requires a path and the corresponding component.
+
+```javascript
+// Set the initial route
+router.setInitialRoute("/home", HomeComponent);
+```
+
+### 3. Define Routes
 
 Use the `addRoute` method to map specific paths to components. Each route should have a unique path (e.g., `/home`) and the corresponding component that should be rendered when that path is accessed.
 
@@ -1067,14 +1082,6 @@ router.addRoute("/home", HomeComponent);
 router.addRoute("/about", AboutComponent);
 ```
 
-### 3. Set the Initial Route
-
-To define the route that should be displayed when the application first loads, use the `setInitialRoute` method. This method requires a path and the corresponding component.
-
-```javascript
-// Set the initial route
-router.setInitialRoute("/home", HomeComponent);
-```
 
 ### 4. Start the Router
 
@@ -1098,16 +1105,17 @@ router.navigate("/about");
 Here’s how everything comes together in your `index.js`:
 
 ```javascript
-import { router } from "./router";
+import { router } from "arc-nodes";
 import HomeComponent from "./components/HomeComponent";
 import AboutComponent from "./components/AboutComponent";
 
+// Set the initial route
+router.setInitialRoute("/home", HomeComponent);
 // Define your routes
 router.addRoute("/home", HomeComponent);
 router.addRoute("/about", AboutComponent);
 
-// Set the initial route
-router.setInitialRoute("/home", HomeComponent);
+
 
 // Start the router
 router.onStart();
@@ -1149,9 +1157,6 @@ To run this project, you'll need:
    npm install
    ```
 
-
-
-Here's a README section addressing the issue with too many open files and how to resolve it:
 
 ---
 
