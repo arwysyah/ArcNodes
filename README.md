@@ -1,4 +1,5 @@
 # ArcNodes
+[![npm version](https://badge.fury.io/js/arc-nodes.svg)](https://badge.fury.io/js/arc-nodes)
 
 ArcNodes is an experimental minimalist and simplified UI Framework for creating web applications using pure JavaScript. It includes core concepts of components, state management and utilizing streamlined content rendering for a straightforward development experience.. This documentation provides an overview of how to use ArcNodes, including installation, basic usage, and advanced features.
 
