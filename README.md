@@ -1216,3 +1216,5 @@ To resolve this issue, you can try the following steps one by one :
 ## Note
 
 This framework is a work-in-progress and not yet complete. It aims to mimic some of React's functionality using pure JavaScript. Some features may be incomplete or not fully tested. Use it for educational purposes or for experimentation.
+
+Cheers
